@@ -1,0 +1,107 @@
+﻿<Window x:Class="Yasinovsky.MailSender.WpfApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
+        mc:Ignorable="d"
+        Title="Рассыльщик" Height="450">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Файл"/>
+            <MenuItem Header="Помощь"/>
+        </Menu>
+        <TabControl>
+            <TabItem Header="Формирование группы рассылки">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="5*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Width" Value="200"/>
+                            </Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="Width" Value="150"/>
+                                <Setter Property="Margin" Value="10, 4"/>
+                            </Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Margin" Value="3"/>
+                                <Setter Property="Padding" Value="2"/>
+                            </Style>
+                        </Grid.Resources>
+                        <WrapPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
+                            <TextBlock Text="Выбрать отправителя"/>
+                            <ComboBox SelectedIndex="0">
+                                <ComboBoxItem>
+                                    Отправитель 1
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    Отправитель 2
+                                </ComboBoxItem>
+                            </ComboBox>
+                            <Button Content="add"/>
+                            <Button Content="edit"/>
+                            <Button Content="remove"/>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                            <TextBlock Text="Выбрать smtp=server"/>
+                            <ComboBox SelectedIndex="0">
+                                <ComboBoxItem>
+                                    smtp 1
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    smtp 2
+                                </ComboBoxItem>
+                            </ComboBox>
+                            <Button Content="add"/>
+                            <Button Content="edit"/>
+                            <Button Content="remove"/>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" >
+                            <TextBlock Text="Перейти в планировщик"/>
+                            <Button Content="timer"/>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="Список адресатов"/>
+                            <Button Content="add"/>
+                            <Button Content="edit"/>
+                            <Button Content="remove"/>
+                        </WrapPanel>
+                    </Grid>
+                    <DockPanel Grid.Row="1">
+                        <Label Content="Список адресатов" DockPanel.Dock="Top"/>
+                        <!--Таблица адресатов-->
+                        <DataGrid>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Email" Width="200"/>
+                                <DataGridTextColumn Header="ФИО" Width="200"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Планировщик">
+                <Ellipse Fill="Wheat" StrokeThickness="5" Stroke="Blue"/>
+            </TabItem>
+            <TabItem Header="Редактор писем">
+                <Ellipse Fill="AliceBlue" StrokeThickness="5" Stroke="Gainsboro"/>
+            </TabItem>
+            <TabItem Header="Стаитстика">
+                <Ellipse Fill="IndianRed" StrokeThickness="5" Stroke="Khaki"/>
+            </TabItem>
+        </TabControl>
+
+    </DockPanel>
+</Window>

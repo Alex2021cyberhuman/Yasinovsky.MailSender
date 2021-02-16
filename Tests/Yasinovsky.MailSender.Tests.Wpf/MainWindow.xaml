@@ -1,0 +1,28 @@
+﻿<Window x:Class="Yasinovsky.MailSender.Tests.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Yasinovsky.MailSender.Tests.Wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="auto" Width="800">
+    <StackPanel>
+        <Label Content="Email To"/>
+        <TextBox x:Name="EmailToEdit"/>
+        <Label Content="Email From"/>
+        <TextBox x:Name="EmailEdit"/>
+        <Label Content="Password"/>
+        <PasswordBox x:Name="PasswordEdit"/>
+        <CheckBox x:Name="IsAuthenticateCheck" Content="Authenticate"/>
+        <Label Content="Port"/>
+        <TextBox x:Name="PortEdit"/>
+        <Label Content="Host"/>
+        <TextBox x:Name="HostEdit"/>
+        <CheckBox x:Name="IsSslCheck" Content="Enable Ssl"/>
+        <Label Content="Subject"/>
+        <TextBox x:Name="SubjectEdit"/>
+        <Label Content="Body"/>
+        <TextBox x:Name="BodyEdit" TextWrapping="WrapWithOverflow" AcceptsReturn="True" MaxLines="100" Height="100"/>
+        <Button Click="SendButton_Click" Content="Send"/>
+    </StackPanel>
+</Window>
