@@ -5,13 +5,15 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.WpfApplication", "Yasinovsky.MailSender.WpfApplication\Yasinovsky.MailSender.WpfApplication.csproj", "{40184354-126A-41F9-8573-5A607B2DC0E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yasinovsky.MailSender.Core", "Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj", "{D09714F3-D0AB-418A-9F53-966BF5A12A4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.Core", "Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj", "{D09714F3-D0AB-418A-9F53-966BF5A12A4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yasinovsky.MailSender.Services", "Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj", "{3D7917DE-2419-49B3-979F-A55DC42E76B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.Services", "Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj", "{3D7917DE-2419-49B3-979F-A55DC42E76B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BEFBC63B-DBC3-4253-89C9-C20868893489}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yasinovsky.MailSender.Tests.Wpf", "Tests\Yasinovsky.MailSender.Tests.Wpf\Yasinovsky.MailSender.Tests.Wpf.csproj", "{9209902C-8584-4F1F-8089-3A3EA4B86C2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.Tests.Wpf", "Tests\Yasinovsky.MailSender.Tests.Wpf\Yasinovsky.MailSender.Tests.Wpf.csproj", "{9209902C-8584-4F1F-8089-3A3EA4B86C2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yasinovsky.MailSender.Services.Wpf", "Yasinovsky.MailSender.Services.Wpf\Yasinovsky.MailSender.Services.Wpf.csproj", "{DABA9647-AF57-40DC-B89A-AA561BE3DDB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{9209902C-8584-4F1F-8089-3A3EA4B86C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9209902C-8584-4F1F-8089-3A3EA4B86C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9209902C-8584-4F1F-8089-3A3EA4B86C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DABA9647-AF57-40DC-B89A-AA561BE3DDB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DABA9647-AF57-40DC-B89A-AA561BE3DDB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DABA9647-AF57-40DC-B89A-AA561BE3DDB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DABA9647-AF57-40DC-B89A-AA561BE3DDB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
