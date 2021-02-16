@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj" />
+    <ProjectReference Include="..\..\Yasinovsky.MailSender.Services.Wpf\Yasinovsky.MailSender.Services.Wpf.csproj" />
     <ProjectReference Include="..\..\Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj" />
   </ItemGroup>
 
