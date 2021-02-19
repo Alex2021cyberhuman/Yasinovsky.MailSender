@@ -7,6 +7,7 @@ using Yasinovsky.MailSender.Core.Contracts.Services;
 
 namespace Yasinovsky.MailSender.Services
 {
+    // NOTE: Зачем вот я делал эту фигню, если все равно неправильно? Все и так в памяти хранится. Бывает такое что начинаю что-то делать не имеющие пользы и просто теряю время. 
     public class SymmetricEncryptService : IEncryptService
     {
         private readonly byte[] _key;

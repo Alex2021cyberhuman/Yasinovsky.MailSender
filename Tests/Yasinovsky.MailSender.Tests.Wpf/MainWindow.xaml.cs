@@ -24,14 +24,14 @@ namespace Yasinovsky.MailSender.Tests.Wpf
     {
         //private readonly INetUserService _netUserService;
         //private readonly ISmtpClientAccessor _smtpClientAccessor;
-        private readonly IUserDialogService _userDialogService;
+        //private readonly IUserDialogService _userDialogService;
         public MainWindow()
         {
             InitializeComponent();
             //_netUserService = new NetUserService();
             //_smtpClientAccessor = new SmtpClientAccessor(_netUserService);
             //_emailSendService = new MailKitSmtpEmailSendService(_smtpClientAccessor);
-            _userDialogService = new CustomWindowUserDialogService();
+            _/*userDialogService = new CustomWindowUserDialogService();*/
         }
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
@@ -67,12 +67,12 @@ namespace Yasinovsky.MailSender.Tests.Wpf
                 //{
                 //    await _userDialogService.ShowErrorAsync("Timeout", "Error");
                 //}
-            }
-            catch (Exception exp)
-            {
-                await _userDialogService.ShowErrorAsync($"{exp.Message}\n{exp.StackTrace}", exp.GetType().FullName);
-            }
-            IsEnabled = true;
+            //}
+            //catch (Exception exp)
+            //{
+            //    await _userDialogService.ShowErrorAsync($"{exp.Message}\n{exp.StackTrace}", exp.GetType().FullName);
+            //}
+            //IsEnabled = true;
         }
     }
 }
