@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWpf>True</UseWpf>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.3.1">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj" />
+    <ProjectReference Include="..\Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj" />
+  </ItemGroup>
+
+</Project>
