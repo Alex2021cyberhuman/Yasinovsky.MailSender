@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj" />
+    <ProjectReference Include="..\Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj" />
+  </ItemGroup>
+
+</Project>
