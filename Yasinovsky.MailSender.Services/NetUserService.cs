@@ -10,7 +10,7 @@ using Yasinovsky.MailSender.Core.Contracts.Services;
 
 namespace Yasinovsky.MailSender.Services
 {
-    public class NetUserService : INetUserService
+    public class NetUserService
     {
         private NetworkCredential _current = null;
 

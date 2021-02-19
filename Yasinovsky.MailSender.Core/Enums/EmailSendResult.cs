@@ -10,6 +10,8 @@ namespace Yasinovsky.MailSender.Core.Enums
     {
         Success,
         Unauthorized,
-        Timeout
+        Timeout,
+        ProtocolError,
+        CommandError
     }
 }

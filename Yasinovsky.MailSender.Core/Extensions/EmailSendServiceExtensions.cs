@@ -13,44 +13,6 @@ namespace Yasinovsky.MailSender.Core.Extensions
 {
     public static class EmailSendServiceExtensions
     {
-        public static async Task<EmailSendResult> SendAsync(this IEmailSendService service, string title, string body, string from, IEnumerable<string> to)
-        {
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(from),
-                Subject = title,
-                Body = body,
-                IsBodyHtml = Regex.IsMatch(body, @"<.+>.*</.+>")
-            };
-            foreach (var item in to)
-                mailMessage.To.Add(item);
-            return await service.SendAsync(mailMessage);
-        }
-
-        public static async Task<EmailSendResult> SendAsync(this IEmailSendService service, string title, string body, string from, string to)
-        {
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(from),
-                Subject = title,
-                Body = body,
-                IsBodyHtml = Regex.IsMatch(body, @"<.+>.*</.+>")
-            };
-            mailMessage.To.Add(to);
-            return await service.SendAsync(mailMessage);
-        }
-    }
-
-    public static class SmtpClientAccessorExtensions
-    {
-        public static void SetClient(this ISmtpClientAccessor service, string host, int port, bool useSsl = true)
-        {
-            service.SetClient(new SmtpClient
-            {
-                Host = host,
-                Port = port,
-                EnableSsl = useSsl
-            });
-        }
+       
     }
 }

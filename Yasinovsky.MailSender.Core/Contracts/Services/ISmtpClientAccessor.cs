@@ -7,10 +7,4 @@ using System.Threading.Tasks;
 
 namespace Yasinovsky.MailSender.Core.Contracts.Services
 {
-    public interface ISmtpClientAccessor
-    {
-        SmtpClient Client { get; }
-
-        void SetClient(SmtpClient smtpClient);
-    }
 }
