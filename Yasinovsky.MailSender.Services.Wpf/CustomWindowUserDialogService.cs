@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Yasinovsky.MailSender.Core.Contracts.Services;
+using Yasinovsky.MailSender.Core.Models;
 using Yasinovsky.MailSender.Services.Wpf.ViewModels;
 using Yasinovsky.MailSender.Services.Wpf.Windows;
 
 namespace Yasinovsky.MailSender.Services.Wpf
 {
-    public class CustomWindowUserDialogService : IUserDialogService
+    public class CustomWindowUserDialogService : IUserDialogService, IServerUserDialogService
     {
         public Task ShowInformationAsync(string message, string caption)
         {
@@ -39,6 +40,26 @@ namespace Yasinovsky.MailSender.Services.Wpf
         public Task<string> AskStringAsync(string message, string caption, string defaultValue = null)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<Server> OpenCreateDialogAsync()
+        {
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var window = new ServerDialogWindow(new Server());
+                var result = window.ShowDialog();
+                return (Server) window.DataContext;
+            }).Task;
+        }
+
+        public Task<Server> OpenEditDialogAsync(Server server)
+        {
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var oldServer =(Server) server.Clone(); 
+                var window = new ServerDialogWindow(new Server());
+                return window.ShowDialog() ?? false ? (Server) window.DataContext : oldServer;
+            }).Task;
         }
     }
 }

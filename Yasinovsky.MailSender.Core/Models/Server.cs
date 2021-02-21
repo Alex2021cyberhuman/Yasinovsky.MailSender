@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Yasinovsky.MailSender.Core.Models
 {
-    public class Server
+    public class Server : ICloneable
     {
         [Key]
         public int Id { get; set; }
@@ -27,5 +28,9 @@ namespace Yasinovsky.MailSender.Core.Models
         public string Description { get; set; }
 
         public override string ToString() => $"{Name} {Address}:{Port}, {(EnableSsl? "ssl" : "no ssl")}";
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

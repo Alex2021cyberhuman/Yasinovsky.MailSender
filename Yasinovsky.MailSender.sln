@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.Services.Wpf", "Yasinovsky.MailSender.Services.Wpf\Yasinovsky.MailSender.Services.Wpf.csproj", "{DABA9647-AF57-40DC-B89A-AA561BE3DDB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yasinovsky.MailSender.Data", "Yasinovsky.MailSender.Data\Yasinovsky.MailSender.Data.csproj", "{1104454F-8D4E-4BF0-B75D-E58215148EF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yasinovsky.MailSender.Data", "Yasinovsky.MailSender.Data\Yasinovsky.MailSender.Data.csproj", "{1104454F-8D4E-4BF0-B75D-E58215148EF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,6 +7,7 @@
     xmlns:fontAwesome5="clr-namespace:FontAwesome5;assembly=FontAwesome5"
     xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:wpf="clr-namespace:FontAwesome5;assembly=FontAwesome5.Net"
     Title="Рассыльщик"
     Width="800"
@@ -189,6 +190,8 @@
                         <StackPanel>
                             <Label Content="_Дата задания" Target="{Binding ElementName=Calendar}" />
                             <Calendar Name="Calendar" />
+                            <Label Content="_Время отправки" Target="{Binding ElementName=TimePicker}" />
+                            <toolkit:TimePicker Name="TimePicker" />
                             <StackPanel Margin="5,7">
                                 <StackPanel.Resources>
                                     <Style TargetType="Button">

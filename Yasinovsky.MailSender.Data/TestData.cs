@@ -23,6 +23,7 @@ namespace Yasinovsky.MailSender.Data
             _encrypted = true;
         }
 
+        public static Server TestServer => Servers[0];
         public static IList<Server> Servers { get; } = new List<Server>
         {
             new Server
@@ -116,5 +117,21 @@ namespace Yasinovsky.MailSender.Data
                 Body = $"Текст сообщения {i}"
             })
             .ToList();
+
+        public static IList<ScheduleTask> ScheduleTasks { get; } = Messages
+            .Select(message => new ScheduleTask
+            {
+                Id = message.Id,
+                Message = message,
+                MessageId = message.Id,
+                Sender = Senders[0],
+                SenderId = Senders[0].Id,
+                Server = Servers[0],
+                ServerId = Servers[0].Id,
+                Recipients = Recipients,
+                Created = DateTime.Now.AddDays(-1),
+                Scheduled = DateTime.Now.AddDays(1)
+            }).ToList();
+
     }
 }
