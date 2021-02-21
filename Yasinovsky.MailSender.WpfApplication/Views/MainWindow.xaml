@@ -4,18 +4,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:data="clr-namespace:Yasinovsky.MailSender.Data;assembly=Yasinovsky.MailSender.Data"
+    xmlns:fontAwesome5="clr-namespace:FontAwesome5;assembly=FontAwesome5"
     xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpf="clr-namespace:FontAwesome5;assembly=FontAwesome5.Net"
     Title="Рассыльщик"
     Width="800"
     Height="450"
     mc:Ignorable="d">
+    <Window.Resources>
+        <Style TargetType="wpf:FontAwesome">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл" />
             <MenuItem Header="Помощь" />
         </Menu>
-        <TabControl>
+        <TabControl x:Name="TabControl">
             <TabItem Header="Списки">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -25,9 +35,8 @@
                     <ToolBarTray Grid.Row="0">
                         <ToolBarTray.Resources>
                             <Style TargetType="ComboBox">
-                                <Setter Property="MinWidth" Value="120" />
+                                <Setter Property="MinWidth" Value="199" />
                                 <Setter Property="MaxWidth" Value="200" />
-                                <Setter Property="Margin" Value="50,0,0,0" />
                             </Style>
                         </ToolBarTray.Resources>
                         <ToolBar Width="400">
@@ -40,9 +49,30 @@
                                 MaxWidth="200"
                                 ItemsSource="{x:Static data:TestData.Senders}"
                                 SelectedIndex="0" />
-                            <Button Content="(Добавить)" />
-                            <Button Content="(Редактировать)" />
-                            <Button Content="(Удалить)" />
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Добавить отправителя</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="YellowGreen" Icon="Solid_PlusCircle" />
+                                </Button.Content>
+                            </Button>
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Изменить отправителя</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="Blue" Icon="Solid_PencilAlt" />
+                                </Button.Content>
+                            </Button>
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Удалить отправителя</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="Red" Icon="Solid_MinusCircle" />
+                                </Button.Content>
+                            </Button>
                         </ToolBar>
                         <ToolBar
                             Width="400"
@@ -57,23 +87,67 @@
                                 MaxWidth="200"
                                 ItemsSource="{x:Static data:TestData.Servers}"
                                 SelectedIndex="0" />
-                            <Button Content="(Добавить)" />
-                            <Button Content="(Редактировать)" />
-                            <Button Content="(Удалить)" />
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Добавить сервер</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="YellowGreen" Icon="Solid_PlusCircle" />
+                                </Button.Content>
+                            </Button>
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Изменить сервер</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="Blue" Icon="Solid_PencilAlt" />
+                                </Button.Content>
+                            </Button>
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Удалить сервер</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="Red" Icon="Solid_MinusCircle" />
+                                </Button.Content>
+                            </Button>
                         </ToolBar>
-                        <ToolBar Width="200">
+                        <ToolBar>
                             <ToolBar.Header>
                                 <Label Width="100">Планировщик</Label>
                             </ToolBar.Header>
-                            <Button Content="(Перейти)" />
+                            <Button Click="ButtonBase_OnClick" ToolTip="Перейти в меню планировщик">
+                                <wpf:FontAwesome Icon="Solid_Clock" />
+                            </Button>
                         </ToolBar>
-                        <ToolBar Width="200" Band="1">
+                        <ToolBar Band="1">
                             <ToolBar.Header>
                                 <Label Width="100">Получатели</Label>
                             </ToolBar.Header>
-                            <Button Content="(Добавить)" />
-                            <Button Content="(Редактировать)" />
-                            <Button Content="(Удалить)" />
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Добавить получателя</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="YellowGreen" Icon="Solid_PlusCircle" />
+                                </Button.Content>
+                            </Button>
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Изменить получателя</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="Blue" Icon="Solid_PencilAlt" />
+                                </Button.Content>
+                            </Button>
+                            <Button>
+                                <Button.ToolTip>
+                                    <TextBlock>Удалить получателя</TextBlock>
+                                </Button.ToolTip>
+                                <Button.Content>
+                                    <wpf:FontAwesome Foreground="Red" Icon="Solid_MinusCircle" />
+                                </Button.Content>
+                            </Button>
                         </ToolBar>
                     </ToolBarTray>
                     <DockPanel Grid.Row="1">

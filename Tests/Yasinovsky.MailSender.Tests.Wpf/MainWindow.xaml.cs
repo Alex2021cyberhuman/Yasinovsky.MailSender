@@ -31,14 +31,14 @@ namespace Yasinovsky.MailSender.Tests.Wpf
             //_netUserService = new NetUserService();
             //_smtpClientAccessor = new SmtpClientAccessor(_netUserService);
             //_emailSendService = new MailKitSmtpEmailSendService(_smtpClientAccessor);
-            _/*userDialogService = new CustomWindowUserDialogService();*/
+            /*userDialogService = new CustomWindowUserDialogService();*/
         }
 
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                IsEnabled = false;
+            //try
+            //{
+            //    IsEnabled = false;
                 //if (IsAuthenticateCheck.IsChecked != null && (bool) IsAuthenticateCheck.IsChecked)
                 //    _netUserService.SetCredentials(EmailEdit.Text, PasswordEdit.SecurePassword);
                 //else

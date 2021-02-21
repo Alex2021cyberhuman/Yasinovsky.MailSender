@@ -24,7 +24,7 @@ namespace Yasinovsky.MailSender.Services.Wpf
         {
             return CreateMessageTask(message, caption, 2);
         }
-        private Task CreateMessageTask(string message, string caption, int status) =>
+        private static Task CreateMessageTask(string message, string caption, int status) =>
             Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 var window = new MessageWindow(new MessageViewModel(caption, message, status));

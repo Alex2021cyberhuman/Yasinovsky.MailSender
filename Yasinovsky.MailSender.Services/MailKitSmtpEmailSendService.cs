@@ -17,7 +17,7 @@ namespace Yasinovsky.MailSender.Services
 
     public class MailKitSmtpEmailSendService : IEmailSendService
     {
-        private IEncryptService _encrypt;
+        private readonly IEncryptService _encrypt;
         private readonly ILogger<IEmailSendService> _logger;
 
         private bool IsSecure => _encrypt != null;

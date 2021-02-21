@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.2" />
+    <PackageReference Include="FontAwesome5" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj" />
     <ProjectReference Include="..\Yasinovsky.MailSender.Data\Yasinovsky.MailSender.Data.csproj" />
-    <ProjectReference Include="..\Yasinovsky.MailSender.Services.Wpf\Yasinovsky.MailSender.Services.Wpf.csproj" />
     <ProjectReference Include="..\Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj" />
   </ItemGroup>
 

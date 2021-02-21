@@ -11,5 +11,10 @@ namespace Yasinovsky.MailSender.WpfApplication.Views
         {
             InitializeComponent();
         }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            TabControl.SelectedIndex = 1;
+        }
     }
 }
