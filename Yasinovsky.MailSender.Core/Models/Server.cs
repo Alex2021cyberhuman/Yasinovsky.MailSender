@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace Yasinovsky.MailSender.Core.Models
 {
-    public class Server : ICloneable
+    public class Server : ICloneable, IHasId
     {
         [Key]
         public int Id { get; set; }

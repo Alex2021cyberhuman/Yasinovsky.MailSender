@@ -14,7 +14,7 @@ namespace Yasinovsky.MailSender.Core.Models.Base
 
         protected virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = null)
         {
-            if (property.Equals(value))
+            if (property is not null &&  property.Equals(value))
                 return;
             property = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

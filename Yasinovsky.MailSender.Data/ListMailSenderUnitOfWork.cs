@@ -7,11 +7,11 @@ namespace Yasinovsky.MailSender.Data
 {
     public class ListMailSenderUnitOfWork : IUnitOfWork
     {
-        private readonly ListGenericRepository<Message> _messages = new ListGenericRepository<Message>((x, y) => x.Id - y.Id);
-        private readonly ListGenericRepository<Server> _servers = new ListGenericRepository<Server>((x, y) => x.Id - y.Id);
-        private readonly ListGenericRepository<Sender> _senders = new ListGenericRepository<Sender>((x, y) => x.Id - y.Id);
-        private readonly ListGenericRepository<Recipient> _recipients = new ListGenericRepository<Recipient>((x, y) => x.Id - y.Id);
-        private readonly ListGenericRepository<ScheduleTask> _scheduleTasks = new ListGenericRepository<ScheduleTask>((x, y) => x.Id - y.Id);
+        private readonly ListGenericRepository<Message> _messages;
+        private readonly ListGenericRepository<Server> _servers;
+        private readonly ListGenericRepository<Sender> _senders;
+        private readonly ListGenericRepository<Recipient> _recipients;
+        private readonly ListGenericRepository<ScheduleTask> _scheduleTasks;
 
         static ListMailSenderUnitOfWork()
         {
@@ -24,20 +24,28 @@ namespace Yasinovsky.MailSender.Data
 
         public ListMailSenderUnitOfWork()
         {
+            _messages = new((x, y) => x.Id - y.Id);
+            _servers = new((x, y) => x.Id - y.Id);
+            _senders = new((x, y) => x.Id - y.Id);
+            _recipients = new((x, y) => x.Id - y.Id);
+            _scheduleTasks = new((x, y) => x.Id - y.Id);
         }
         
         public IRepository<T> Set<T>()
         {
-            var type = nameof(T);
-            return type switch
-            {
-                "Message" => (IRepository<T>) _messages,
-                "Server" => (IRepository<T>) _servers,
-                "Sender" => (IRepository<T>) _senders,
-                "Recipient" => (IRepository<T>) _recipients,
-                "ScheduleTask" => (IRepository<T>) _scheduleTasks,
-                _ => throw new InvalidOperationException("Repository not found")
-            };
+            var type = typeof(T);
+            if (type == typeof(Message))
+                return (IRepository<T>) _messages;
+            else if (type == typeof(Server))
+                return (IRepository<T>) _servers;
+            else if (type == typeof(Sender))
+                return (IRepository<T>) _senders;
+            else if (type == typeof(Recipient))
+                return (IRepository<T>) _recipients;
+            else if (type == typeof(ScheduleTask))
+                return (IRepository<T>) _scheduleTasks;
+            else
+                throw new InvalidOperationException("Repository not found");
         }
 
         public Task CommitAsync()

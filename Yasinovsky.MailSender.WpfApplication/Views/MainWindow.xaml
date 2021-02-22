@@ -12,6 +12,7 @@
     Title="Рассыльщик"
     Width="800"
     Height="450"
+    DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
     <Window.Resources>
         <Style TargetType="wpf:FontAwesome">
@@ -26,7 +27,7 @@
             <MenuItem Header="Файл" />
             <MenuItem Header="Помощь" />
         </Menu>
-        <TabControl x:Name="TabControl">
+        <TabControl x:Name="TabControl" DataContext="{Binding Path=CatalogViewModel}">
             <TabItem Header="Списки">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -86,9 +87,10 @@
                             <ComboBox
                                 MinWidth="120"
                                 MaxWidth="200"
-                                ItemsSource="{x:Static data:TestData.Servers}"
-                                SelectedIndex="0" />
-                            <Button>
+                                ItemsSource="{Binding Path=Servers}"
+                                SelectedIndex="0"
+                                SelectedItem="{Binding Path=SelectedServer}" />
+                            <Button Command="{Binding Path=AddServerCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Добавить сервер</TextBlock>
                                 </Button.ToolTip>
@@ -96,7 +98,7 @@
                                     <wpf:FontAwesome Foreground="YellowGreen" Icon="Solid_PlusCircle" />
                                 </Button.Content>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding Path=EditServerCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Изменить сервер</TextBlock>
                                 </Button.ToolTip>
@@ -104,7 +106,7 @@
                                     <wpf:FontAwesome Foreground="Blue" Icon="Solid_PencilAlt" />
                                 </Button.Content>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding Path=RemoveServerCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Удалить сервер</TextBlock>
                                 </Button.ToolTip>

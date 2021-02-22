@@ -32,7 +32,7 @@ namespace Yasinovsky.MailSender.Services
         {
         }
 
-        public MailKitSmtpEmailSendService(IEncryptService encrypt, ILogger<IEmailSendService> logger = null)
+        public MailKitSmtpEmailSendService(ILogger<IEmailSendService> logger = null, IEncryptService encrypt = null)
         {
             _encrypt = encrypt;
             _logger = logger;

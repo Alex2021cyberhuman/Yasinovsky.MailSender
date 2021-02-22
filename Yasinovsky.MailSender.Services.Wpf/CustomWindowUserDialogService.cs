@@ -47,8 +47,7 @@ namespace Yasinovsky.MailSender.Services.Wpf
             return Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 var window = new ServerDialogWindow(new Server());
-                var result = window.ShowDialog();
-                return (Server) window.DataContext;
+                return window.ShowDialog() ?? false ? (Server)window.DataContext : null;
             }).Task;
         }
 
@@ -57,7 +56,7 @@ namespace Yasinovsky.MailSender.Services.Wpf
             return Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 var oldServer =(Server) server.Clone(); 
-                var window = new ServerDialogWindow(new Server());
+                var window = new ServerDialogWindow(server);
                 return window.ShowDialog() ?? false ? (Server) window.DataContext : oldServer;
             }).Task;
         }

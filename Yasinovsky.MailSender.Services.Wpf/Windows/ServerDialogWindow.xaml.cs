@@ -25,5 +25,17 @@ namespace Yasinovsky.MailSender.Services.Wpf.Windows
             InitializeComponent();
             DataContext = server;
         }
+
+        private void DialogSaveClose(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        private void DialogCancelClose(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
+        }
     }
 }
