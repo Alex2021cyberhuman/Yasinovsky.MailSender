@@ -29,6 +29,11 @@ namespace Yasinovsky.MailSender.Data
             _senders = new((x, y) => x.Id - y.Id);
             _recipients = new((x, y) => x.Id - y.Id);
             _scheduleTasks = new((x, y) => x.Id - y.Id);
+            ListGenericRepository<Message>.Items = TestData.Messages;
+            ListGenericRepository<Server>.Items = TestData.Servers;
+            ListGenericRepository<Sender>.Items = TestData.Senders;
+            ListGenericRepository<Recipient>.Items = TestData.Recipients;
+            ListGenericRepository<ScheduleTask>.Items = TestData.ScheduleTasks;
         }
         
         public IRepository<T> Set<T>()
@@ -36,16 +41,15 @@ namespace Yasinovsky.MailSender.Data
             var type = typeof(T);
             if (type == typeof(Message))
                 return (IRepository<T>) _messages;
-            else if (type == typeof(Server))
+            if (type == typeof(Server))
                 return (IRepository<T>) _servers;
-            else if (type == typeof(Sender))
+            if (type == typeof(Sender))
                 return (IRepository<T>) _senders;
-            else if (type == typeof(Recipient))
+            if (type == typeof(Recipient))
                 return (IRepository<T>) _recipients;
-            else if (type == typeof(ScheduleTask))
+            if (type == typeof(ScheduleTask))
                 return (IRepository<T>) _scheduleTasks;
-            else
-                throw new InvalidOperationException("Repository not found");
+            throw new InvalidOperationException("Repository not found");
         }
 
         public Task CommitAsync()

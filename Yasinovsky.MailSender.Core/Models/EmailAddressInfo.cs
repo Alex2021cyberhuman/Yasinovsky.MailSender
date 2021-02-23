@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace Yasinovsky.MailSender.Core.Models
 {
-    public abstract class EmailAddressInfo : IHasId
+    public abstract class EmailAddressInfo : IHasId, ICloneable
     {
         [Key]
         public int Id { get; set; }
@@ -18,5 +19,9 @@ namespace Yasinovsky.MailSender.Core.Models
         public string Description { get; set; }
 
         public override string ToString() => $"{Name} {Address}";
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

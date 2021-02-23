@@ -53,19 +53,57 @@ namespace Yasinovsky.MailSender.Data
             }
         }
 
+        protected override async Task InitializeAsync()
+        {
+            if (!_fileInfo.Exists || _fileInfo.Length < 2)
+            {
+                IsInitialized = true;
+                IsChanged = true;
+            }
+
+            if (!IsInitialized)
+            {
+                IsInitialized = true;
+                await using var reader = _fileInfo.OpenRead();
+                Buffer = await JsonSerializer.DeserializeAsync<ICollection<ScheduleTask>>(reader, _options);
+                foreach (var item in Buffer)
+                {
+                    AssignAdditionalInformation(item);
+                }
+                IsChanged = false;
+            }
+
+            
+        }
+
         private void AssignAdditionalInformation(ScheduleTask item)
         {
             item.Id =
                 (Buffer?.OrderBy(x => x.Id)
-                    .LastOrDefault()?.Id ?? 0) + 1;
-            item.Message = _unitOfWork.Set<Message>()
-                .First(x => x.Id == item.MessageId);
-            item.Server = _unitOfWork.Set<Server>()
-                .First(x => x.Id == item.ServerId);
-            item.Sender = _unitOfWork.Set<Sender>()
+                        .LastOrDefault()?.Id ?? 0) + 1;
+            if (item.Message is not null)
+                item.MessageId = item.Message.Id;
+            else
+                item.Message = _unitOfWork.Set<Message>().First(x => x.Id == item.MessageId);
+            if (item.Server is not null)
+                item.ServerId = item.Server.Id;
+            else
+                item.Server = _unitOfWork.Set<Server>()
+                    .First(x => x.Id == item.ServerId);
+
+            if (item.Sender is not null)
+                item.SenderId = item.Sender.Id;
+            else
+                item.Sender = _unitOfWork.Set<Sender>()
                 .First(x => x.Id == item.SenderId);
-            item.RecipientIds = item.Recipients.Select(x => x.Id)
-                .ToList();
+
+            if (item.Recipients is not null)
+                item.RecipientIds = item.Recipients.Select(x => x.Id)
+                    .ToList();
+            else
+                item.Recipients = _unitOfWork.Set<Recipient>()
+                    .Where(x => item.RecipientIds.Contains(x.Id))
+                    .ToList();
         }
     }
 }

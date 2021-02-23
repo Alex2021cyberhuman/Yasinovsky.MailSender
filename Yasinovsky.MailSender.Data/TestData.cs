@@ -45,16 +45,6 @@ namespace Yasinovsky.MailSender.Data
                 EnableSsl = true,
                 Login = "user@yandex.ru",
                 Password = "PassWord",
-            },
-            new Server
-            {
-                Id = 3,
-                Name = "sendinblue",
-                Address = "smtp-relay.sendinblue.com",
-                Port = 587,
-                EnableSsl = true,
-                Login = "yasinoabc@gmail.com",
-                Password = "wy8aYUO9vsmC7nbt",
             }
         };
 

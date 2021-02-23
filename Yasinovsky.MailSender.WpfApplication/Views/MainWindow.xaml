@@ -3,17 +3,20 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:data="clr-namespace:Yasinovsky.MailSender.Data;assembly=Yasinovsky.MailSender.Data"
-    xmlns:fontAwesome5="clr-namespace:FontAwesome5;assembly=FontAwesome5"
-    xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:wpf="clr-namespace:FontAwesome5;assembly=FontAwesome5.Net"
     Title="Рассыльщик"
     Width="800"
     Height="450"
-    DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}"
+    DataContext="{Binding Path=MainViewModel, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
         <Style TargetType="wpf:FontAwesome">
             <Setter Property="FontSize" Value="20" />
@@ -27,7 +30,7 @@
             <MenuItem Header="Файл" />
             <MenuItem Header="Помощь" />
         </Menu>
-        <TabControl x:Name="TabControl" DataContext="{Binding Path=CatalogViewModel}">
+        <TabControl x:Name="TabControl">
             <TabItem Header="Списки">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -49,9 +52,10 @@
                             <ComboBox
                                 MinWidth="120"
                                 MaxWidth="200"
-                                ItemsSource="{x:Static data:TestData.Senders}"
-                                SelectedIndex="0" />
-                            <Button>
+                                ItemsSource="{Binding Senders}"
+                                SelectedIndex="0"
+                                SelectedItem="{Binding SelectedSender}" />
+                            <Button Command="{Binding AddSenderCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Добавить отправителя</TextBlock>
                                 </Button.ToolTip>
@@ -59,7 +63,7 @@
                                     <wpf:FontAwesome Foreground="YellowGreen" Icon="Solid_PlusCircle" />
                                 </Button.Content>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding EditSenderCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Изменить отправителя</TextBlock>
                                 </Button.ToolTip>
@@ -67,7 +71,7 @@
                                     <wpf:FontAwesome Foreground="Blue" Icon="Solid_PencilAlt" />
                                 </Button.Content>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding RemoveSenderCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Удалить отправителя</TextBlock>
                                 </Button.ToolTip>
@@ -127,7 +131,7 @@
                             <ToolBar.Header>
                                 <Label Width="100">Получатели</Label>
                             </ToolBar.Header>
-                            <Button>
+                            <Button Command="{Binding AddRecipientCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Добавить получателя</TextBlock>
                                 </Button.ToolTip>
@@ -135,7 +139,7 @@
                                     <wpf:FontAwesome Foreground="YellowGreen" Icon="Solid_PlusCircle" />
                                 </Button.Content>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding EditRecipientCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Изменить получателя</TextBlock>
                                 </Button.ToolTip>
@@ -143,7 +147,7 @@
                                     <wpf:FontAwesome Foreground="Blue" Icon="Solid_PencilAlt" />
                                 </Button.Content>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding RemoveRecipientCommand}">
                                 <Button.ToolTip>
                                     <TextBlock>Удалить получателя</TextBlock>
                                 </Button.ToolTip>
@@ -161,7 +165,8 @@
                             AutoGenerateColumns="False"
                             GridLinesVisibility="Vertical"
                             IsReadOnly="True"
-                            ItemsSource="{x:Static data:TestData.Recipients}"
+                            ItemsSource="{Binding Recipients}"
+                            SelectedItem="{Binding SelectedRecipient}"
                             VerticalGridLinesBrush="Gray">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="ID" />
@@ -190,10 +195,13 @@
                     </Grid.ColumnDefinitions>
                     <GroupBox Grid.Column="0" Header="Планирование">
                         <StackPanel>
-                            <Label Content="_Дата задания" Target="{Binding ElementName=Calendar}" />
-                            <Calendar Name="Calendar" />
-                            <Label Content="_Время отправки" Target="{Binding ElementName=TimePicker}" />
-                            <toolkit:TimePicker Name="TimePicker" />
+                            <TextBlock Text="Дата задания" />
+                            <Calendar
+                                Name="Calendar"
+                                SelectedDate="{Binding SelectedDateTime}"
+                                SelectionMode="SingleDate" />
+                            <TextBlock Text="Время отправки" />
+                            <toolkit:TimePicker Name="TimePicker" Value="{Binding SelectedDateTime}" />
                             <StackPanel Margin="5,7">
                                 <StackPanel.Resources>
                                     <Style TargetType="Button">
@@ -202,7 +210,7 @@
                                     </Style>
                                 </StackPanel.Resources>
                                 <Button Content="Запланировать" />
-                                <Button Content="Отправить" />
+                                <Button Command="{Binding SendCommand}" Content="Отправить" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
@@ -212,8 +220,92 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch" />
                     <GroupBox Grid.Column="1" Header="Задания">
-                        <ListBox>
-                            <ListBoxItem HorizontalContentAlignment="Stretch">
+                        <ListBox ItemsSource="{Binding ScheduleTasks}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Padding="4"
+                                        BorderBrush="Blue"
+                                        BorderThickness="1"
+                                        CornerRadius="4">
+                                        <Grid>
+                                            <StackPanel>
+                                                <TextBlock FontSize="16" Text="{Binding Path=Scheduled, StringFormat='{}Время: {0:dd/MM/yyyy}'}" />
+                                                <TextBlock FontSize="16" Text="{Binding Path=Sender.Name, StringFormat='{}Отправитель: {0}'}">
+                                                    <TextBlock.ToolTip>
+                                                        <TextBlock>
+                                                            <TextBlock Text="Имя: " />
+                                                            <TextBlock Text="{Binding Sender.Name}" />
+                                                            <LineBreak />
+                                                            <TextBlock Text="Адрес" />
+                                                            <TextBlock Text="{Binding Sender.Address}" />
+                                                            <LineBreak />
+                                                            <TextBlock Text="{Binding Sender.Description}" TextWrapping="WrapWithOverflow" />
+                                                        </TextBlock>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
+                                                <TextBlock FontSize="16" Text="{Binding Path=Server.Name, StringFormat='{}Сервер: {0}'}">
+                                                    <TextBlock.ToolTip>
+                                                        <TextBlock>
+                                                            <TextBlock Text="Имя: " />
+                                                            <TextBlock Text="{Binding Server.Name}" />
+                                                            <LineBreak />
+                                                            <TextBlock Text="Адрес" />
+                                                            <TextBlock Text="{Binding Server.Address}" />
+                                                            <LineBreak />
+                                                            <TextBlock Text="{Binding Server.Description}" TextWrapping="WrapWithOverflow" />
+                                                        </TextBlock>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
+                                                <TextBlock FontSize="16" Text="{Binding Path=Message.Title, StringFormat='{}Письмо: {0}'}">
+                                                    <TextBlock.ToolTip>
+                                                        <ScrollViewer>
+                                                            <TextBlock>
+                                                                <TextBlock Text="Имя: " />
+                                                                <TextBlock Text="{Binding Message.Name}" />
+                                                                <LineBreak />
+                                                                <TextBlock Text="Описание: " />
+                                                                <TextBlock Text="{Binding Message.Description}" />
+                                                                <LineBreak />
+                                                                <TextBlock Text="Тема: " />
+                                                                <TextBlock Text="{Binding Message.Title}" />
+                                                                <LineBreak />
+                                                                <TextBlock Text="Текст: " />
+                                                                <TextBlock Text="{Binding Message.Body}" TextWrapping="WrapWithOverflow" />
+                                                            </TextBlock>
+                                                        </ScrollViewer>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
+                                                <Expander Header="Получатели">
+                                                    <ItemsControl FontSize="10" ItemsSource="{Binding Recipients}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock>
+                                                                    <TextBlock.ToolTip>
+                                                                        <TextBlock Text="{Binding Description}" TextWrapping="WrapWithOverflow" />
+                                                                    </TextBlock.ToolTip>
+                                                                    <TextBlock Text="Имя: " />
+                                                                    <TextBlock Text="{Binding Name}" />
+                                                                    <LineBreak />
+                                                                    <TextBlock Text="Адрес" />
+                                                                    <TextBlock Text="{Binding Address}" />
+                                                                </TextBlock>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Expander>
+                                            </StackPanel>
+                                            <Button
+                                                Padding="5,0"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Content="x"
+                                                ToolTip="Удалить" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <!--<ListBoxItem HorizontalContentAlignment="Stretch">
                                 <Border
                                     Padding="4"
                                     BorderBrush="Blue"
@@ -256,7 +348,7 @@
                                             ToolTip="Удалить" />
                                     </Grid>
                                 </Border>
-                            </ListBoxItem>
+                            </ListBoxItem>-->
                         </ListBox>
                     </GroupBox>
                 </Grid>
@@ -264,40 +356,68 @@
             <TabItem Header="Редактор писем">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <GroupBox
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         Grid.Column="0"
                         MinWidth="120"
                         Header="Письма">
-                        <ListBox>
-                            <ListBoxItem>Goao</ListBoxItem>
-                            <ListBoxItem>Goao</ListBoxItem>
-                            <ListBoxItem>Goao</ListBoxItem>
-                        </ListBox>
+                        <DockPanel>
+                            <StackPanel Margin="5,7" DockPanel.Dock="Bottom">
+                                <StackPanel.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Margin" Value="0,3" />
+                                        <Setter Property="Background" Value="White" />
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Button Command="{Binding RemoveMessageCommand}" Content="Удалить" />
+                                <Button Command="{Binding AddMessageCommand}" Content="Добавить/Клонировать" />
+                                <Button Command="{Binding ConfirmEditMessageCommand}" Content="Принять измения" />
+                            </StackPanel>
+                            <ListBox ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Run FontWeight="Bold" Text="{Binding Title}" />
+                                            <Run FontSize="10" Text="{Binding Id, StringFormat='{}ID: {0}'}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding SelectedMessageChangedCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListBox>
+                        </DockPanel>
                     </GroupBox>
                     <GridSplitter
                         Grid.Row="0"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         Grid.Column="0"
                         Width="3" />
                     <GroupBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Header="Заголовок">
-                        <TextBox AcceptsReturn="True" AcceptsTab="True" />
+                        Header="Заголовок письма">
+                        <TextBox Text="{Binding MessageTitle}" />
                     </GroupBox>
                     <GroupBox
                         Grid.Row="1"
                         Grid.Column="1"
                         Header="Текст письма">
-                        <TextBox AcceptsReturn="True" AcceptsTab="True" />
+                        <TextBox
+                            AcceptsReturn="True"
+                            AcceptsTab="True"
+                            Text="{Binding MessageBody}"
+                            TextWrapping="WrapWithOverflow" />
                     </GroupBox>
                 </Grid>
             </TabItem>
@@ -355,4 +475,5 @@
         </TabControl>
 
     </DockPanel>
+
 </Window>

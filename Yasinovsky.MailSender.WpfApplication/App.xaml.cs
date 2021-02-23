@@ -60,11 +60,13 @@ namespace Yasinovsky.MailSender.WpfApplication
         {
             services.AddTransient<MainViewModel>();
             services.AddTransient<CatalogViewModel>();
-
+            services.AddTransient<SchedulerViewModel>();
             services.AddTransient<MainWindow>();
 
             services.AddSingleton<IUserDialogService, CustomWindowUserDialogService>();
             services.AddSingleton<IServerUserDialogService, CustomWindowUserDialogService>();
+            services.AddSingleton<ISenderUserDialogService, CustomWindowUserDialogService>();
+            services.AddSingleton<IRecipientUserDialogService, CustomWindowUserDialogService>();
 
             services.AddSingleton<IEncryptService, SymmetricEncryptService>( provider =>
             {
@@ -74,24 +76,24 @@ namespace Yasinovsky.MailSender.WpfApplication
                 return new SymmetricEncryptService(aes, key, iv);
             });
 
-            services.AddScoped<IUnitOfWork, JsonFileMailSenderUnitOfWork>(provider =>
+            services.AddSingleton<IUnitOfWork, JsonFileMailSenderUnitOfWork>(provider =>
             {
 
-                var directory = new DirectoryInfo(Path.Combine(
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var directory = string.IsNullOrWhiteSpace(configuration["JsonDatabase"]) ? new DirectoryInfo(Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    "Yasinovsky.MailSender.JsonDatabase"));
+                    "Yasinovsky.MailSender.JsonDatabase")) : new DirectoryInfo(configuration["JsonDatabase"]);
                 if (!directory.Exists)
                     directory.Create();
-                var logger = provider.GetRequiredService<ILogger<App>>();
                 var options = new JsonSerializerOptions(JsonSerializerDefaults.General)
                 {
                     PropertyNameCaseInsensitive = true,
                     WriteIndented = true
                 };
                 var unitOfWork = new JsonFileMailSenderUnitOfWork(directory, options);
-                AsyncExtensions.RunSync(() => unitOfWork.CommitAsync());
                 return unitOfWork;
             });
+
             services.AddSingleton<IEmailSendService, MailKitSmtpEmailSendService>(provider =>
             {
                 var logger = provider.GetRequiredService<ILogger<IEmailSendService>>();
@@ -107,40 +109,40 @@ namespace Yasinovsky.MailSender.WpfApplication
             var service = Host.Services.GetRequiredService<IEncryptService>();
             await TestData.EncryptPasswords(service);
 
-            var scope = Host.Services.CreateScope();
-            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-            if (!unitOfWork.Set<Message>().Any())
-                foreach (var message in TestData.Messages)
-                {
-                    await unitOfWork.Set<Message>().AddAsync(message);
-                }
-            if (!unitOfWork.Set<Server>().Any())
-                foreach (var server in TestData.Servers)
-                {
-                    await unitOfWork.Set<Server>().AddAsync(server);
-                }
-            if (!unitOfWork.Set<Sender>().Any())
-                foreach (var item in TestData.Senders)
-                {
-                    await unitOfWork.Set<Sender>().AddAsync(item);
-                }
-            if (!unitOfWork.Set<Recipient>().Any())
-                foreach (var recipient in TestData.Recipients)
-                {
-                    await unitOfWork.Set<Recipient>().AddAsync(recipient);
-                }
+            using var scope = Host.Services.CreateScope();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+            if (bool.Parse(configuration["SeedDatabase"]))
+            {
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                if (!unitOfWork.Set<Message>().Any())
+                    foreach (var message in TestData.Messages)
+                        await unitOfWork.Set<Message>().AddAsync(message);
 
-            await unitOfWork.CommitAsync();
+                if (!unitOfWork.Set<Server>().Any())
+                    foreach (var server in TestData.Servers)
+                        await unitOfWork.Set<Server>().AddAsync(server);
+                if (!unitOfWork.Set<Sender>().Any())
+                    foreach (var item in TestData.Senders)
+                        await unitOfWork.Set<Sender>().AddAsync(item);
+
+                if (!unitOfWork.Set<Recipient>().Any())
+                    foreach (var recipient in TestData.Recipients)
+                        await unitOfWork.Set<Recipient>().AddAsync(recipient);
+
+                await unitOfWork.CommitAsync();
 
 
-            if (!unitOfWork.Set<ScheduleTask>().Any())
-                foreach (var scheduleTask in TestData.ScheduleTasks)
-                {
-                    await unitOfWork.Set<ScheduleTask>().AddAsync(scheduleTask);
-                }
-            await unitOfWork.CommitAsync();
+                if (!unitOfWork.Set<ScheduleTask>().Any())
+                    foreach (var scheduleTask in TestData.ScheduleTasks)
+                    {
+                        await unitOfWork.Set<ScheduleTask>().AddAsync(scheduleTask);
+                    }
 
-            var mainWindow = Host.Services.GetRequiredService<MainWindow>();
+                await unitOfWork.CommitAsync();
+            }
+
+
+            var mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
             MainWindow = mainWindow;
             MainWindow.Show();
         }

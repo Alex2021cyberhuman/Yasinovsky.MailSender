@@ -9,7 +9,7 @@ using Yasinovsky.MailSender.Services.Wpf.Windows;
 
 namespace Yasinovsky.MailSender.Services.Wpf
 {
-    public class CustomWindowUserDialogService : IUserDialogService, IServerUserDialogService
+    public class CustomWindowUserDialogService : IUserDialogService, IServerUserDialogService,ISenderUserDialogService, IRecipientUserDialogService
     {
         public Task ShowInformationAsync(string message, string caption)
         {
@@ -58,6 +58,44 @@ namespace Yasinovsky.MailSender.Services.Wpf
                 var oldServer =(Server) server.Clone(); 
                 var window = new ServerDialogWindow(server);
                 return window.ShowDialog() ?? false ? (Server) window.DataContext : oldServer;
+            }).Task;
+        }
+
+        Task<Sender> ISenderUserDialogService.OpenEditDialogAsync(Sender sender)
+        {
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var clone = (Sender)sender.Clone();
+                var window = new EmailAddressDialogWindow(sender);
+                return window.ShowDialog() ?? false ? (Sender)window.DataContext : clone;
+            }).Task;
+        }
+
+        Task<Sender> ISenderUserDialogService.OpenCreateDialogAsync()
+        {
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var window = new EmailAddressDialogWindow(new Sender());
+                return window.ShowDialog() ?? false ? (Sender)window.DataContext : null;
+            }).Task;
+        }
+
+        Task<Recipient> IRecipientUserDialogService.OpenEditDialogAsync(Recipient recipient)
+        {
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var clone = (Recipient)recipient.Clone();
+                var window = new EmailAddressDialogWindow(recipient);
+                return window.ShowDialog() ?? false ? (Recipient)window.DataContext : clone;
+            }).Task;
+        }
+
+        Task<Recipient> IRecipientUserDialogService.OpenCreateDialogAsync()
+        {
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var window = new EmailAddressDialogWindow(new Recipient());
+                return window.ShowDialog() ?? false ? (Recipient)window.DataContext : null;
             }).Task;
         }
     }

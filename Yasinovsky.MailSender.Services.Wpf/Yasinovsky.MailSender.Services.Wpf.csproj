@@ -20,13 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Windows\ServerDialogWindow.xaml.cs">
+    <Compile Update="Windows\EmailAddressDialogWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Windows\ServerDialogWindow.xaml">
+    <Page Update="Windows\EmailAddressDialogWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

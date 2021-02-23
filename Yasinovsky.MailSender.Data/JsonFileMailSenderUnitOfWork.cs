@@ -13,7 +13,7 @@ namespace Yasinovsky.MailSender.Data
         private readonly JsonFileGenericRepository<Server> _servers;
         private readonly JsonFileGenericRepository<Sender> _senders;
         private readonly JsonFileGenericRepository<Recipient> _recipients;
-        private readonly JsonFileGenericRepository<ScheduleTask> _scheduleTasks;
+        private readonly JsonFileScheduleTaskRepository _scheduleTasks;
 
         public JsonFileMailSenderUnitOfWork(DirectoryInfo directory, JsonSerializerOptions options)
         {
@@ -23,7 +23,7 @@ namespace Yasinovsky.MailSender.Data
             _servers = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(Server) + "Set.json")));
             _senders = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(Sender) + "Set.json")));
             _recipients = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(Recipient) + "Set.json")));
-            _scheduleTasks = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(ScheduleTask) + "Set.json")));
+            _scheduleTasks = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(ScheduleTask) + "Set.json")), this);
         }
 
         public IRepository<T> Set<T>()
@@ -44,11 +44,11 @@ namespace Yasinovsky.MailSender.Data
 
         public async Task CommitAsync()
         {
-                await _messages.CommitAsync();
-                await _servers.CommitAsync();
-                await _senders.CommitAsync();
-                await _recipients.CommitAsync();
-                await  _scheduleTasks.CommitAsync();
+            await _messages.CommitAsync();
+            await _servers.CommitAsync();
+            await _senders.CommitAsync();
+            await _recipients.CommitAsync();
+            await  _scheduleTasks.CommitAsync();
         }
     }
 }

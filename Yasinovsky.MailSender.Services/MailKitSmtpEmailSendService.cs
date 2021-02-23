@@ -7,6 +7,7 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 
 using MimeKit;
+using MimeKit.Text;
 using Yasinovsky.MailSender.Core.Contracts.Services;
 using Yasinovsky.MailSender.Core.Enums;
 using Yasinovsky.MailSender.Core.Models;
@@ -76,7 +77,15 @@ namespace Yasinovsky.MailSender.Services
                password = await _encrypt.DecryptStringAsync(server.Password);
             }
 
-            var mimeMessage = new MimeMessage {Subject = message.Title, Body = new TextPart(Plain) {Text = message.Body}};
+            var mimeMessage = new MimeMessage
+            {
+                Subject = message.Title,
+                Body = new TextPart(TextFormat.Text)
+                {
+                    Text = message.Body
+                }
+            };
+
             mimeMessage.From.Add(new MailboxAddress(sender.Name, sender.Address));
             IEnumerable<Recipient> enumerable = recipients as List<Recipient> ?? recipients.ToList();
             mimeMessage.To.AddRange(
@@ -85,7 +94,7 @@ namespace Yasinovsky.MailSender.Services
             using var client = new SmtpClient();
             try
             {
-                await client.ConnectAsync(server.Address, 25, server.EnableSsl);
+                await client.ConnectAsync(server.Address, server.Port, server.EnableSsl);
                 await client.AuthenticateAsync(server.Login, password);
                 await client.SendAsync(mimeMessage);
 

@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Yasinovsky.MailSender.Core.Contracts.Data;
+using Yasinovsky.MailSender.Core.Extensions;
 using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace Yasinovsky.MailSender.Data
@@ -14,8 +15,8 @@ namespace Yasinovsky.MailSender.Data
     // TODO: Make removing related data
     public class JsonFileGenericRepository<T> : IRepository<T> where T : IHasId
     {
-        private readonly JsonSerializerOptions _options;
-        private readonly FileInfo _fileInfo;
+        protected readonly JsonSerializerOptions _options;
+        protected readonly FileInfo _fileInfo;
         
         private static ICollection<T> _buffer = new List<T>();
 
@@ -36,7 +37,12 @@ namespace Yasinovsky.MailSender.Data
 
         public ICollection<T> Buffer
         {
-            get => _buffer;
+            get
+            {
+                if (!IsInitialized)
+                    AsyncExtensions.RunSync(InitializeAsync);
+                return _buffer;
+            }
             set
             {
                 _buffer = value;
@@ -49,27 +55,7 @@ namespace Yasinovsky.MailSender.Data
 
         public async Task CommitAsync()
         {
-            if (!_fileInfo.Exists || _fileInfo.Length < 2)
-            {
-                IsInitialized = true;
-                IsChanged = true;
-            }
-
-
-            if (!IsInitialized)
-            {
-                IsInitialized = true;
-                IsChanged = false;
-                await using var reader = _fileInfo.OpenRead();
-                try
-                {
-                    Buffer = await JsonSerializer.DeserializeAsync<ICollection<T>>(reader, _options);
-                }
-                catch (JsonException)
-                {
-                    IsChanged = true;
-                }
-            }
+            await InitializeAsync();
 
             if (IsChanged)
             {
@@ -78,6 +64,23 @@ namespace Yasinovsky.MailSender.Data
                 await JsonSerializer.SerializeAsync(writer, Buffer, _options);
                 IsChanged = false;
                 IsInitialized = true;
+            }
+        }
+
+        protected virtual async Task InitializeAsync()
+        {
+            if (!_fileInfo.Exists || _fileInfo.Length < 2)
+            {
+                IsInitialized = true;
+                IsChanged = true;
+            }
+
+            if (!IsInitialized)
+            {
+                IsInitialized = true;
+                await using var reader = _fileInfo.OpenRead();
+                Buffer = await JsonSerializer.DeserializeAsync<ICollection<T>>(reader, _options);
+                IsChanged = false;
             }
         }
 
