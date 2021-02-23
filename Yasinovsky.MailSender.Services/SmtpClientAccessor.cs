@@ -4,14 +4,14 @@ using Yasinovsky.MailSender.Core.Contracts.Services;
 
 namespace Yasinovsky.MailSender.Services
 {
-    public class SmtpClientAccessor : ISmtpClientAccessor
+    public class SmtpClientAccessor
     {
-        private readonly INetUserService _netUserService;
+        //private readonly INetUserService _netUserService;
 
-        public SmtpClientAccessor(INetUserService netUserService)
-        {
-            this._netUserService = netUserService;
-        }
+        //public SmtpClientAccessor(INetUserService netUserService)
+        //{
+        //    this._netUserService = netUserService;
+        //}
 
         private SmtpClient _smtpClient;
 
@@ -19,13 +19,13 @@ namespace Yasinovsky.MailSender.Services
         {
             get
             {
-                if (_smtpClient is null)
-                    return null;
-                var credentials = _netUserService?.GetCredentials();
-                if (credentials != null)
-                    _smtpClient.Credentials = credentials;
-                else
-                    _smtpClient.UseDefaultCredentials = true;
+                //if (_smtpClient is null)
+                //    return null;
+                ////var credentials = _netUserService?.GetCredentials();
+                //if (credentials != null)
+                //    _smtpClient.Credentials = credentials;
+                //else
+                //    _smtpClient.UseDefaultCredentials = true;
                 return _smtpClient;
             }
         }

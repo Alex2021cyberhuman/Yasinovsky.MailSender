@@ -1,9 +1,10 @@
-﻿<Application x:Class="Yasinovsky.MailSender.WpfApplication.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
-             StartupUri="MainWindow.xaml">
+﻿<Application
+    x:Class="Yasinovsky.MailSender.WpfApplication.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
+    Startup="App_Startup">
     <Application.Resources>
-         
+        <local:ViewModelLocator x:Key="ViewModelLocator" />
     </Application.Resources>
 </Application>

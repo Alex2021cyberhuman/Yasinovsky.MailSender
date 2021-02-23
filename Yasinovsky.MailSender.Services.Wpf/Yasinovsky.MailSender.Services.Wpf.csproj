@@ -19,4 +19,17 @@
     <ProjectReference Include="..\Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Windows\EmailAddressDialogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Windows\EmailAddressDialogWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>
