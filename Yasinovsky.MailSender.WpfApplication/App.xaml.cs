@@ -59,8 +59,6 @@ namespace Yasinovsky.MailSender.WpfApplication
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
             services.AddTransient<MainViewModel>();
-            services.AddTransient<CatalogViewModel>();
-            services.AddTransient<SchedulerViewModel>();
             services.AddTransient<MainWindow>();
 
             services.AddSingleton<IUserDialogService, CustomWindowUserDialogService>();

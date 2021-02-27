@@ -16,14 +16,14 @@ using Yasinovsky.MailSender.Core.Models;
 namespace Yasinovsky.MailSender.Services.Wpf.Windows
 {
     /// <summary>
-    /// Interaction logic for EmailAddressDialogWindow.xaml
+    /// Interaction logic for ServerDialogWindow.xaml
     /// </summary>
-    public partial class EmailAddressDialogWindow
+    public partial class ServerDialogWindow : Window
     {
-        public EmailAddressDialogWindow(EmailAddressInfo emailAddress)
+        public ServerDialogWindow(Server server)
         {
             InitializeComponent();
-            DataContext = emailAddress;
+            DataContext = server;
         }
 
         private void DialogSaveClose(object sender, RoutedEventArgs e)
@@ -40,7 +40,7 @@ namespace Yasinovsky.MailSender.Services.Wpf.Windows
 
         private void Validation_OnError(object sender, ValidationErrorEventArgs e)
         {
-            var control = (Control) sender;
+            var control = (Control)sender;
             if (e.Action == ValidationErrorEventAction.Added)
             {
                 control.ToolTip = e.Error.ErrorContent;
@@ -50,7 +50,14 @@ namespace Yasinovsky.MailSender.Services.Wpf.Windows
             {
                 control.ClearValue(ToolTipProperty);
             }
-            
+        }
+
+        private void PasswordEdit_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            //Text="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+            var viewModel = (Server) DataContext;
+            var password = ((PasswordBox) sender).Password;
+            viewModel.Password = password;
         }
     }
 }

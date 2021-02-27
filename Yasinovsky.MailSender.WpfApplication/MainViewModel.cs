@@ -35,7 +35,6 @@ namespace Yasinovsky.MailSender.WpfApplication
         private string _messageTitle;
         private ObservableCollection<ScheduleTask> _scheduleTasks;
         private ObservableCollection<Message> _messages;
-        private WpfCustomCommand _removeMessageCommand;
 
         public MainViewModel(IUnitOfWork unitOfWork,
             IServerUserDialogService serverUserDialog,
@@ -457,14 +456,11 @@ namespace Yasinovsky.MailSender.WpfApplication
                 return;
             var server = SelectedServer;
             Servers.Remove(SelectedServer);
-            var password = server.Password;
-            server.Password = string.Empty;
+            var password =  (string)server.Password.Clone();
             server = await _serverUserDialog.OpenEditDialogAsync(server);
             if (server is null)
                 throw new NotImplementedException();
-            if (string.IsNullOrWhiteSpace(server.Password))
-                server.Password = password;
-            else
+            if (server.Password != password)
                 server.Password = await _encryptService.EncryptStringAsync(server.Password);
             server = await _unitOfWork.Set<Server>()
                 .UpdateAsync(server);
