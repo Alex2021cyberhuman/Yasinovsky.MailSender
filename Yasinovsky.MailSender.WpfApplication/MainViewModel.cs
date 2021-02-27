@@ -10,6 +10,7 @@ using Yasinovsky.MailSender.Core.Contracts.Services;
 using Yasinovsky.MailSender.Core.Enums;
 using Yasinovsky.MailSender.Core.Models;
 using Yasinovsky.MailSender.Core.Models.Base;
+using Yasinovsky.MailSender.WpfApplication.Models.Base;
 
 namespace Yasinovsky.MailSender.WpfApplication
 {

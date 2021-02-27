@@ -23,4 +23,10 @@
     <ProjectReference Include="..\Yasinovsky.MailSender.Services\Yasinovsky.MailSender.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="persons.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
