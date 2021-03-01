@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Yasinovsky.MailSender.Core.Models.Base;
 
-namespace Yasinovsky.MailSender.Core.Models.Base
+namespace Yasinovsky.MailSender.WpfApplication.Models.Base
 {
     public class WpfCustomCommand : CustomCommand
     {

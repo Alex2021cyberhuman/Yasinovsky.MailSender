@@ -9,12 +9,4 @@ namespace Yasinovsky.MailSender.Core.Contracts.Services
 
         public Task<Sender> OpenEditDialogAsync(Sender sender);
     }
-
-
-    public interface IRecipientUserDialogService
-    {
-        public Task<Recipient> OpenCreateDialogAsync();
-
-        public Task<Recipient> OpenEditDialogAsync(Recipient sender);
-    }
 }

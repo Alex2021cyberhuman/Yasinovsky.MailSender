@@ -1,0 +1,73 @@
+﻿<Window
+    x:Class="Yasinovsky.MailSender.Services.Wpf.Windows.ServerDialogWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:behaviors="clr-namespace:Yasinovsky.MailSender.Services.Wpf.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Редактор почтового сервера"
+    Width="400"
+    Height="450"
+    mc:Ignorable="d">
+    <StackPanel Margin="20,10">
+        <TextBlock Text="Название сервера" />
+        <TextBox
+            Name="NameEdit"
+            Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+            Validation.Error="Validation_OnError" />
+        <TextBlock Text="Адрес" />
+        <TextBox
+            Name="AddressEdit"
+            Text="{Binding Path=Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+            Validation.Error="Validation_OnError" />
+        <TextBlock Text="Порт" />
+        <TextBox
+            Name="PortEdit"
+            Text="{Binding Path=Port, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+            Validation.Error="Validation_OnError" />
+        <CheckBox Content="Исспользовать SSL" IsChecked="{Binding EnableSsl, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
+        <TextBlock Text="Логин" />
+        <TextBox
+            Name="LoginEdit"
+            Text="{Binding Path=Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+            Validation.Error="Validation_OnError" />
+        <TextBlock Text="Пароль" />
+        <PasswordBox Name="PasswordEdit" Validation.Error="Validation_OnError">
+            <b:Interaction.Behaviors>
+                <behaviors:PasswordBehavior Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </b:Interaction.Behaviors>
+        </PasswordBox>
+        <TextBlock Text="Описание сервера" />
+        <TextBox
+            Height="75"
+            AcceptsReturn="True"
+            AcceptsTab="True"
+            AllowDrop="True"
+            Text="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+            TextWrapping="WrapWithOverflow"
+            Validation.Error="Validation_OnError" />
+        <StackPanel>
+            <Button Click="DialogSaveClose" Content="Сохранить">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="IsEnabled" Value="False" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <Setter Property="IsEnabled" Value="True" />
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=NameEdit}" Value="False" />
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=AddressEdit}" Value="False" />
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=LoginEdit}" Value="False" />
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=PortEdit}" Value="False" />
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=PasswordEdit}" Value="False" />
+                                </MultiDataTrigger.Conditions>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Click="DialogCancelClose" Content="Отмена" />
+        </StackPanel>
+    </StackPanel>
+</Window>
