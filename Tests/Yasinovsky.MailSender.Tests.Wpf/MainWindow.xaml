@@ -24,5 +24,7 @@
         <Label Content="Body"/>
         <TextBox x:Name="BodyEdit" TextWrapping="WrapWithOverflow" AcceptsReturn="True" MaxLines="100" Height="100"/>
         <Button Click="SendButton_Click" Content="Send"/>
+        <DataGrid></DataGrid>
+        <DataGrid Height="100"/>
     </StackPanel>
 </Window>
