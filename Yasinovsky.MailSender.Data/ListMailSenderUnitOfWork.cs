@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Yasinovsky.MailSender.Core.Contracts.Data;
 using Yasinovsky.MailSender.Core.Models;
+using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace Yasinovsky.MailSender.Data
 {
@@ -36,7 +37,7 @@ namespace Yasinovsky.MailSender.Data
             ListGenericRepository<ScheduleTask>.Items = TestData.ScheduleTasks;
         }
         
-        public IRepository<T> Set<T>()
+        public IRepository<T> Set<T>() where T : class, IHasId
         {
             var type = typeof(T);
             if (type == typeof(Message))

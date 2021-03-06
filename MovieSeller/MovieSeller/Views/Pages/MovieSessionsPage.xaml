@@ -1,0 +1,56 @@
+﻿<Page
+    x:Class="MovieSeller.Views.Pages.MovieSessionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:domain="clr-namespace:MovieSeller.Core.Models.Domain;assembly=MovieSeller.Core"
+    xmlns:local="clr-namespace:MovieSeller.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:MovieSeller.Views.Pages"
+    xmlns:properties="clr-namespace:MovieSeller.Properties"
+    xmlns:viewModels="clr-namespace:MovieSeller.ViewModels"
+    Title="MovieSessionsPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:MovieSessionsViewModel />
+    </Page.DataContext>
+    <Grid>
+        <DataGrid
+            Margin="0,0,-374,45"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding MovieSessions}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Movie.Name}" Header="{x:Static properties:Resource.DataGridHeaderMovieName}" />
+                <DataGridTextColumn Binding="{Binding Path=Begin}" Header="{x:Static properties:Resource.DataGridHeaderBegin}" />
+                <DataGridTextColumn Binding="{Binding Path=End}" Header="{x:Static properties:Resource.DataGridHeaderEnd}" />
+                <DataGridTextColumn Binding="{Binding Path=MaxCount}" Header="{x:Static properties:Resource.DataGridHeaderMaxCount}" />
+                <DataGridTextColumn Binding="{Binding Path=Bookings.Count}" Header="{x:Static properties:Resource.DataGridHeaderCurrentCount}" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="domain:MovieSession">
+                            <StackPanel Orientation="Vertical">
+                                <Button
+                                    Command="{Binding Path=DataContext.BuyBookingCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
+                                    CommandParameter="{Binding}"
+                                    Content="{x:Static properties:Resource.ButtonContentBuyBooking}" />
+                                <Button
+                                    Command="{Binding Path=DataContext.ChangeMovieCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
+                                    CommandParameter="{Binding Movie}"
+                                    Content="{x:Static properties:Resource.ButtonContentChangeMovie}" />
+                                <Button
+                                    Command="{Binding Path=DataContext.RemoveSessionCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
+                                    CommandParameter="{Binding Movie}"
+                                    Content="{x:Static properties:Resource.ButtonContentRemoveSession}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Page>

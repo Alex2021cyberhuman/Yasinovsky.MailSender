@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Yasinovsky.MailSender.Core.Contracts.Data;
 using Yasinovsky.MailSender.Core.Models;
+using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace Yasinovsky.MailSender.Data
 {
@@ -27,7 +28,7 @@ namespace Yasinovsky.MailSender.Data
             _scheduleTasks = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(ScheduleTask) + "Set.json")));
         }
 
-        public IRepository<T> Set<T>()
+        public IRepository<T> Set<T>() where T : class, IHasId
         {
             var type = typeof(T);
             if (type == typeof(Message))
