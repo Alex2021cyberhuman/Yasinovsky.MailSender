@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:b="clr-namespace:Yasinovsky.MailSender.Services.Wpf.Behaviors;assembly=Yasinovsky.MailSender.Services.Wpf"
+    xmlns:local="clr-namespace:Yasinovsky.MailSender.WpfApplication"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:wpf="clr-namespace:FontAwesome5;assembly=FontAwesome5.Net"
@@ -183,6 +185,9 @@
                                     Binding="{Binding Description}"
                                     Header="Описание" />
                             </DataGrid.Columns>
+                            <i:Interaction.Behaviors>
+                                <b:RecipientMultiSelectBehavior SelectedItems="{Binding SelectedRecipients, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </i:Interaction.Behaviors>
                         </DataGrid>
                     </DockPanel>
                 </Grid>

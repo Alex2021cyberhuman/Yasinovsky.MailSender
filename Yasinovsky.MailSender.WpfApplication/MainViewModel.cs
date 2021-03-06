@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -36,6 +37,7 @@ namespace Yasinovsky.MailSender.WpfApplication
         private string _messageTitle;
         private ObservableCollection<ScheduleTask> _scheduleTasks;
         private ObservableCollection<Message> _messages;
+        private ObservableCollection<Recipient> _selectedRecipients;
 
         public MainViewModel(IUnitOfWork unitOfWork,
             IServerUserDialogService serverUserDialog,
@@ -175,6 +177,110 @@ namespace Yasinovsky.MailSender.WpfApplication
         }
 
         #endregion
+        
+        #region Load
+
+        public ICommand LoadCommand { get; }
+
+        private async void OnLoad()
+        {
+            await _unitOfWork.CommitAsync();
+            Recipients = new ObservableCollection<Recipient>(_unitOfWork.Set<Recipient>()
+                .ToList());
+            SelectedRecipient = Recipients.FirstOrDefault();
+            Senders = new ObservableCollection<Sender>(_unitOfWork.Set<Sender>()
+                .ToList());
+            SelectedSender = Senders.FirstOrDefault();
+            Servers = new ObservableCollection<Server>(_unitOfWork.Set<Server>()
+                .ToList());
+            SelectedServer = Servers.FirstOrDefault();
+
+            ScheduleTasks = new ObservableCollection<ScheduleTask>(_unitOfWork.Set<ScheduleTask>()
+                .ToList());
+
+            Messages = new ObservableCollection<Message>(_unitOfWork.Set<Message>()
+                .ToList());
+
+            SelectedMessage = Messages.FirstOrDefault();
+        }
+
+        #endregion
+        
+        #region Servers
+
+        public ObservableCollection<Server> Servers
+        {
+            get =>
+                _servers;
+            set =>
+                SetProperty(ref _servers,
+                    value);
+        }
+
+        public Server SelectedServer
+        {
+            get =>
+                _selectedServer;
+            set =>
+                SetProperty(ref _selectedServer,
+                    value);
+        }
+
+
+        public ICommand AddServerCommand { get; }
+
+        public ICommand RemoveServerCommand { get; }
+
+        public ICommand EditServerCommand { get; }
+
+
+        private async void OnAddServer()
+        {
+            var server = await _serverUserDialog.OpenCreateDialogAsync();
+            if (server is null)
+                return;
+            server.Password = await _encryptService.EncryptStringAsync(server.Password);
+            server = await _unitOfWork.Set<Server>()
+                .AddAsync(server);
+            Servers.Add(server);
+            await _unitOfWork.CommitAsync();
+            SelectedServer = Servers.LastOrDefault();
+        }
+
+        private async void OnRemoveServer()
+        {
+            if (SelectedServer is null)
+                return;
+            await _unitOfWork.Set<Server>()
+                .RemoveAsync(SelectedServer);
+            Servers.Remove(SelectedServer);
+            await _unitOfWork
+                .CommitAsync();
+            SelectedServer = Servers.FirstOrDefault();
+        }
+
+        private async void OnEditServer()
+        {
+            if (SelectedServer is null)
+                return;
+            var server = SelectedServer;
+            Servers.Remove(SelectedServer);
+            var password =  (string)server.Password.Clone();
+            server = await _serverUserDialog.OpenEditDialogAsync(server);
+            if (server is null)
+                throw new NotImplementedException();
+            if (server.Password != password)
+                server.Password = await _encryptService.EncryptStringAsync(server.Password);
+            server = await _unitOfWork.Set<Server>()
+                .UpdateAsync(server);
+            Servers.Add(server);
+            await _unitOfWork.CommitAsync();
+            SelectedServer = server;
+        }
+
+      
+
+        #endregion
 
         #region Schedule
 
@@ -212,16 +318,16 @@ namespace Yasinovsky.MailSender.WpfApplication
                 return;
             }
             
-            if (SelectedRecipient is null)
+            if (SelectedRecipients is null || SelectedRecipients.Count == 0)
             {
-                await _userDialogService.ShowErrorAsync("Не выбран получатель. Потом сделаю возможность выбора нескольких получателей", "Ошибка");
+                await _userDialogService.ShowErrorAsync("Не выбранs получательs", "Ошибка");
                 return;
             }
 
             var result = await _emailSendService.SendAsync(
                 SelectedServer,
                 SelectedSender,
-                new[] {SelectedRecipient},
+                SelectedRecipients,
                 SelectedMessage);
             if (result != EmailSendResult.Success)
             {
@@ -235,35 +341,18 @@ namespace Yasinovsky.MailSender.WpfApplication
 
         #endregion
 
-        #region Load
-
-        public ICommand LoadCommand { get; }
-
-        private async void OnLoad()
-        {
-            await _unitOfWork.CommitAsync();
-            Recipients = new ObservableCollection<Recipient>(_unitOfWork.Set<Recipient>()
-                .ToList());
-            SelectedRecipient = Recipients.FirstOrDefault();
-            Senders = new ObservableCollection<Sender>(_unitOfWork.Set<Sender>()
-                .ToList());
-            SelectedSender = Senders.FirstOrDefault();
-            Servers = new ObservableCollection<Server>(_unitOfWork.Set<Server>()
-                .ToList());
-            SelectedServer = Servers.FirstOrDefault();
-
-            ScheduleTasks = new ObservableCollection<ScheduleTask>(_unitOfWork.Set<ScheduleTask>()
-                .ToList());
-
-            Messages = new ObservableCollection<Message>(_unitOfWork.Set<Message>()
-                .ToList());
-
-            SelectedMessage = Messages.FirstOrDefault();
-        }
-
-        #endregion
-
         #region Recipients
+        public ObservableCollection<Recipient> SelectedRecipients
+        {
+            get => _selectedRecipients ??= new ObservableCollection<Recipient>(new[] {_selectedRecipient});
+            set
+            {
+                SetProperty(ref _selectedRecipients, value);
+                Debug.WriteLine($@"SelRecs: {DateTime.UtcNow}
+{string.Join("\n", value)};
+");
+            }
+        }
 
         public ObservableCollection<Recipient> Recipients
         {
@@ -394,80 +483,6 @@ namespace Yasinovsky.MailSender.WpfApplication
             Senders.Add(sender);
             await _unitOfWork.CommitAsync();
             SelectedSender = sender;
-        }
-
-        #endregion
-
-        #region Servers
-
-        public ObservableCollection<Server> Servers
-        {
-            get =>
-                _servers;
-            set =>
-                SetProperty(ref _servers,
-                    value);
-        }
-
-        public Server SelectedServer
-        {
-            get =>
-                _selectedServer;
-            set =>
-                SetProperty(ref _selectedServer,
-                    value);
-        }
-
-
-        public ICommand AddServerCommand { get; }
-
-        public ICommand RemoveServerCommand { get; }
-
-        public ICommand EditServerCommand { get; }
-
-
-        private async void OnAddServer()
-        {
-            var server = await _serverUserDialog.OpenCreateDialogAsync();
-            if (server is null)
-                return;
-            server.Password = await _encryptService.EncryptStringAsync(server.Password);
-            server = await _unitOfWork.Set<Server>()
-                .AddAsync(server);
-            Servers.Add(server);
-            await _unitOfWork.CommitAsync();
-            SelectedServer = Servers.LastOrDefault();
-        }
-
-        private async void OnRemoveServer()
-        {
-            if (SelectedServer is null)
-                return;
-            await _unitOfWork.Set<Server>()
-                .RemoveAsync(SelectedServer);
-            Servers.Remove(SelectedServer);
-            await _unitOfWork
-                .CommitAsync();
-            SelectedServer = Servers.FirstOrDefault();
-        }
-
-        private async void OnEditServer()
-        {
-            if (SelectedServer is null)
-                return;
-            var server = SelectedServer;
-            Servers.Remove(SelectedServer);
-            var password =  (string)server.Password.Clone();
-            server = await _serverUserDialog.OpenEditDialogAsync(server);
-            if (server is null)
-                throw new NotImplementedException();
-            if (server.Password != password)
-                server.Password = await _encryptService.EncryptStringAsync(server.Password);
-            server = await _unitOfWork.Set<Server>()
-                .UpdateAsync(server);
-            Servers.Add(server);
-            await _unitOfWork.CommitAsync();
-            SelectedServer = server;
         }
 
         #endregion

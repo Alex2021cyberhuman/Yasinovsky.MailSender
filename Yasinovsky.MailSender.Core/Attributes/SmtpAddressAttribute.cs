@@ -11,9 +11,9 @@ namespace Yasinovsky.MailSender.Core.Attributes
 {
     public class SmtpAddressAttribute : ValidationAttribute
     {
-        private static Regex _smtpRegex =
+        private static readonly Regex _smtpRegex =
             new(
-                @"^(smtp)\.([\w\-]+\w)\.(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$");
+                @"^(smtp)\.([\w\-]+\w)\.(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", RegexOptions.Compiled);
         public SmtpAddressAttribute() : this("Invalid mail address")
         {
 

@@ -14,7 +14,7 @@ namespace Yasinovsky.MailSender.Services
     {
         private readonly string _directoryName;
         private readonly string _outFilename; 
-        private  static Regex _numberRegex = new Regex(@"^([1|2]) (.*) (.*)$", RegexOptions.Compiled);
+        private  static readonly Regex _numberRegex = new(@"^([1|2]) (.*) (.*)$", RegexOptions.Compiled);
 
         public NumbersExecutor(string directoryName, string outFilename)
         {

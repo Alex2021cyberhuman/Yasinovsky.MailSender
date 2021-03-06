@@ -78,10 +78,10 @@ namespace Yasinovsky.MailSender.Core.Extensions
             
             public Exception InnerException { get; set; }
             
-            private readonly AutoResetEvent _workItemsWaiting = new AutoResetEvent(false);
+            private readonly AutoResetEvent _workItemsWaiting = new(false);
 
             private readonly Queue<Tuple<SendOrPostCallback, object>> _items =
-                new Queue<Tuple<SendOrPostCallback, object>>();
+                new();
 
             public override void Send(SendOrPostCallback d, object state)
             {

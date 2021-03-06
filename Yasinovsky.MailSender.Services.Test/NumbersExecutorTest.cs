@@ -2,17 +2,18 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
+using static System.GC;
 
 namespace Yasinovsky.MailSender.Services.Test
 {
     public class NumbersExecutorTest : IAsyncLifetime
     {
-        private NumbersExecutor _executor = new NumbersExecutor(".\\NumbersForTest\\", _outFilename);
-        private static string _outFilename = ".\\NumbersForTest\\Result.data";
+        private readonly NumbersExecutor _executor = new(".\\NumbersForTest\\", _outFilename);
+        private static readonly string _outFilename = ".\\NumbersForTest\\Result.data";
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            //await _executor.GenerateNumbersInDirectoryAsync();
+            return Task.CompletedTask;
         }
 
         [Fact]
@@ -35,7 +36,6 @@ namespace Yasinovsky.MailSender.Services.Test
         public async Task DisposeAsync()
         {
             await Task.CompletedTask;
-            GC.SuppressFinalize(this);
         }
     }
 }

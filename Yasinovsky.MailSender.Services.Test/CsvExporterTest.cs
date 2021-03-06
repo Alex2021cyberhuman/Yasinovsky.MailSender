@@ -11,7 +11,7 @@ namespace Yasinovsky.MailSender.Services.Test
 {
     public class CsvExporterTest
     {
-        private CsvImporter<Person> _importer;
+        private readonly CsvImporter<Person> _importer;
 
         public CsvExporterTest()
         {
@@ -57,7 +57,7 @@ namespace Yasinovsky.MailSender.Services.Test
         }
 
         [Theory]
-        [MemberData(nameof(Items_PLinqCountId_Work_Data))]
+        [MemberData(nameof(ItemsPLinqCountIdWorkData))]
         public void Items_PLinqCountId_Work(Func<Person, bool> predicate)
         {
             var count = _importer.Items.Count(predicate);
@@ -65,7 +65,7 @@ namespace Yasinovsky.MailSender.Services.Test
         }
 
 
-        public static IEnumerable<object[]> Items_PLinqCountId_Work_Data = new object[][]
+        public static IEnumerable<object[]> ItemsPLinqCountIdWorkData = new object[][]
         {
             new Func<Person, bool>[] {person => person.Id % 10 == 0},
             new Func<Person, bool>[] {person => person.Name.Length < 10},

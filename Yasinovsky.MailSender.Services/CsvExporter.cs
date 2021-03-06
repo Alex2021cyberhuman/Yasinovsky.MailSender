@@ -41,12 +41,12 @@ namespace Yasinovsky.MailSender.Services
             var stringBuilders = stringItems
                 .Select((s, i) => (value: s, index: i))
                 .GroupBy(tuple => tuple.index % processorsCount)
-                .Select(x =>
+                .Select(grouping =>
                 {
                     var builder = new StringBuilder();
-                    foreach (var item in x)
+                    foreach (var (value, _) in grouping)
                     {
-                        builder.AppendLine(item.value);
+                        builder.AppendLine(value);
                     }
 
                     return builder;

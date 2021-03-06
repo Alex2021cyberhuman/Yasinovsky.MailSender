@@ -87,7 +87,6 @@ namespace Yasinovsky.MailSender.Services.Test
                 return n;
             if (n < 0)
                 throw new ArgumentException("Invalid n");
-            var partialResults = new long[Environment.ProcessorCount];
             return ParallelEnumerable.Range(1, n).Sum();
         }
     }

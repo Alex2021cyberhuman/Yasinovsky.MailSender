@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Yasinovsky.MailSender.Core.Models.Base;
+#pragma warning disable 169
 
 namespace Yasinovsky.MailSender.WpfApplication.Models.Base
 {
