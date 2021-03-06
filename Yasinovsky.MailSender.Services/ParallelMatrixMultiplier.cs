@@ -11,7 +11,7 @@ namespace Yasinovsky.MailSender.Services
 
         private readonly ParallelOptions _options = new()
         {
-            MaxDegreeOfParallelism = Environment.ProcessorCount
+            MaxDegreeOfParallelism = (int)Math.Sqrt(Environment.ProcessorCount)
         };
 
         public ParallelMatrixMultiplier(double[,] a, double[,] b, ParallelOptions options = null)

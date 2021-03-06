@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Yasinovsky.MailSender.Services.Test
@@ -11,26 +13,36 @@ namespace Yasinovsky.MailSender.Services.Test
         public void Test1()
         {
             var random = new Random();
-            var count = 100;
-            var min = 0;
-            var max = 10;
+            var count = 1000;
+            var min = -1000;
+            var max = 1000;
             var matrixA = new double[count, count];
             var matrixB = new double[count, count];
+
             InitMatrix(matrixA, random, min, max);
             InitMatrix(matrixB, random, min, max);
             
-            PrintMatrix(matrixA, nameof(matrixA));
-            PrintMatrix(matrixB, nameof(matrixB));
+            //PrintMatrix(matrixA, nameof(matrixA));
+            //PrintMatrix(matrixB, nameof(matrixB));
 
-            var manager = new ParallelMatrixMultiplier(matrixA, matrixB);
+            var manager = new ParallelMatrixMultiplier(matrixA, matrixB, new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            });
 
             var result1 = manager.Calculate();
-            PrintMatrix(result1, nameof(result1));
+            //PrintMatrix(result1, nameof(result1));
 
             var result = manager.CalculateParallel();
-
-            PrintMatrix(result, nameof(result));
-            Assert.True(true);
+            
+            //PrintMatrix(result, nameof(result));
+            for (int i = 0; i < result.GetLength(0); i++)
+            {
+                for (int j = 0; j < result.GetLength(1); j++)
+                {
+                    Assert.Equal(result[i, j], result1[i, j]);
+                }
+            }
         }
 
         private static string PrintMatrix(double[,] matrix, string name)
