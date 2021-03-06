@@ -1,7 +1,4 @@
-﻿using System.Net.Mail;
-using Yasinovsky.MailSender.Core.Contracts.Services;
-
-namespace Yasinovsky.MailSender.Core.Extensions
+﻿namespace Yasinovsky.MailSender.Core.Extensions
 {
     public static class SmtpClientAccessorExtensions
     {

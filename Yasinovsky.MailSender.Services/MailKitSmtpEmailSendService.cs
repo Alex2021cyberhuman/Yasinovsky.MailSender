@@ -11,7 +11,6 @@ using MimeKit.Text;
 using Yasinovsky.MailSender.Core.Contracts.Services;
 using Yasinovsky.MailSender.Core.Enums;
 using Yasinovsky.MailSender.Core.Models;
-using static MimeKit.Text.TextFormat;
 
 namespace Yasinovsky.MailSender.Services
 {

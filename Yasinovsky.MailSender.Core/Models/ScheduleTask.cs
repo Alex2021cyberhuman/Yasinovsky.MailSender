@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace Yasinovsky.MailSender.Core.Models
@@ -35,9 +32,6 @@ namespace Yasinovsky.MailSender.Core.Models
         [JsonIgnore]
         public Server Server { get; set; }
 
-        [JsonIgnore]
         public ICollection<Recipient> Recipients { get; set; }
-
-        public ICollection<int> RecipientIds { get; set; }
     }
 }

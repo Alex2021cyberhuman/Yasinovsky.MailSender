@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using Yasinovsky.MailSender.Core.Enums;
 using Yasinovsky.MailSender.Core.Models;

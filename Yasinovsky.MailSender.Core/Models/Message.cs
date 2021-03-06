@@ -8,7 +8,6 @@ namespace Yasinovsky.MailSender.Core.Models
         [Key]
         public int Id { get; set; }
 
-        [Required, StringLength(500)]
         public string Name { get; set; }
 
         [StringLength(1000)]

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using Yasinovsky.MailSender.Core.Contracts.Services;
 using Yasinovsky.MailSender.Core.Models;
 using Yasinovsky.MailSender.Services.Wpf.ViewModels;

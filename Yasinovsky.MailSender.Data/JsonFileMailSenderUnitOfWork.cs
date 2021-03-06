@@ -13,7 +13,8 @@ namespace Yasinovsky.MailSender.Data
         private readonly JsonFileGenericRepository<Server> _servers;
         private readonly JsonFileGenericRepository<Sender> _senders;
         private readonly JsonFileGenericRepository<Recipient> _recipients;
-        private readonly JsonFileScheduleTaskRepository _scheduleTasks;
+        // WARN: USING THIS REPOSITORY MAKES TASK SCHEDULING IMPOSSIBLE
+        private readonly JsonFileGenericRepository<ScheduleTask> _scheduleTasks;
 
         public JsonFileMailSenderUnitOfWork(DirectoryInfo directory, JsonSerializerOptions options)
         {
@@ -23,7 +24,7 @@ namespace Yasinovsky.MailSender.Data
             _servers = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(Server) + "Set.json")));
             _senders = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(Sender) + "Set.json")));
             _recipients = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(Recipient) + "Set.json")));
-            _scheduleTasks = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(ScheduleTask) + "Set.json")), this);
+            _scheduleTasks = new(options, new FileInfo(Path.Combine(directory.FullName, nameof(ScheduleTask) + "Set.json")));
         }
 
         public IRepository<T> Set<T>()

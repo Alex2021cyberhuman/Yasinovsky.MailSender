@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Yasinovsky.MailSender.Core.Contracts.Data;
 
@@ -20,17 +18,17 @@ namespace Yasinovsky.MailSender.Data
 
         public static ICollection<T> Items { get; set; } = new List<T>();
 
-        private static IQueryable<T> Queryable => Items.AsQueryable();
+        public async Task<IEnumerable<T>> GetWhereAsync(Expression<Func<T, bool>> expression)
+        {
+            await Task.CompletedTask;
+            return Items.AsQueryable().Where(expression).ToList();
+        }
 
-        public IEnumerator<T> GetEnumerator() => Items.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable) Items).GetEnumerator();
-
-        public Type ElementType => Queryable.ElementType;
-
-        public Expression Expression => Queryable.Expression;
-
-        public IQueryProvider Provider => Queryable.Provider;
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
+        {
+            await Task.CompletedTask;
+            return Items.AsQueryable().FirstOrDefault(expression);
+        }
 
         public async Task<T> AddAsync(T item)
         {

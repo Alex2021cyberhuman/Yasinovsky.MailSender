@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Yasinovsky.MailSender.Core.Contracts.Data;
 using Yasinovsky.MailSender.Core.Contracts.Services;
 using Yasinovsky.MailSender.Data;
@@ -35,8 +30,8 @@ namespace Yasinovsky.MailSender.WpfApplication
         {
             Exit += App_Exit;
             var builder = new HostBuilder()
-                .ConfigureServices(ConfigureServices)
                 .ConfigureAppConfiguration(ConfigureAppConfiguration)
+                .ConfigureServices(ConfigureServices)
                 .ConfigureLogging(ConfigureLogging);
             Host = builder.Build();
         }
@@ -58,6 +53,7 @@ namespace Yasinovsky.MailSender.WpfApplication
 
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
+            var configuration = context.Configuration;
             services.AddTransient<MainViewModel>();
             services.AddTransient<MainWindow>();
 
@@ -74,22 +70,42 @@ namespace Yasinovsky.MailSender.WpfApplication
                 return new SymmetricEncryptService(aes, key, iv);
             });
 
-            services.AddSingleton<IUnitOfWork, JsonFileMailSenderUnitOfWork>(provider =>
-            {
+            #region AddJsonFileMailSenderUnitOfWork
+            //services.AddSingleton<IUnitOfWork, JsonFileMailSenderUnitOfWork>(provider =>
+            //{
 
-                var configuration = provider.GetRequiredService<IConfiguration>();
-                var directory = string.IsNullOrWhiteSpace(configuration["JsonDatabase"]) ? new DirectoryInfo(Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    "Yasinovsky.MailSender.JsonDatabase")) : new DirectoryInfo(configuration["JsonDatabase"]);
-                if (!directory.Exists)
-                    directory.Create();
-                var options = new JsonSerializerOptions(JsonSerializerDefaults.General)
-                {
-                    PropertyNameCaseInsensitive = true,
-                    WriteIndented = true
-                };
-                var unitOfWork = new JsonFileMailSenderUnitOfWork(directory, options);
+            //    var configuration = provider.GetRequiredService<IConfiguration>();
+            //    var directory = string.IsNullOrWhiteSpace(configuration["JsonDatabase"]) ? new DirectoryInfo(Path.Combine(
+            //        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            //        "Yasinovsky.MailSender.JsonDatabase")) : new DirectoryInfo(configuration["JsonDatabase"]);
+            //    if (!directory.Exists)
+            //        directory.Create();
+            //    var options = new JsonSerializerOptions(JsonSerializerDefaults.General)
+            //    {
+            //        PropertyNameCaseInsensitive = true,
+            //        WriteIndented = true
+            //    };
+            //    var unitOfWork = new JsonFileMailSenderUnitOfWork(directory, options);
+            //    return unitOfWork;
+            //}); 
+            #endregion
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlite(configuration.GetConnectionString("SqlDatabase"))
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging();
+            });
+
+            services.AddScoped<IUnitOfWork, DbContextUnitOfWork>(provider =>
+            {
+                var scope = provider.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context.Database.EnsureCreated();
+
+                var unitOfWork = new DbContextUnitOfWork(context);
                 return unitOfWork;
+
             });
 
             services.AddSingleton<IEmailSendService, MailKitSmtpEmailSendService>(provider =>
@@ -112,25 +128,25 @@ namespace Yasinovsky.MailSender.WpfApplication
             if (bool.Parse(configuration["SeedDatabase"]))
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                if (!unitOfWork.Set<Message>().Any())
+                if (!(await unitOfWork.Set<Message>().GetAllAsync()).Any())
                     foreach (var message in TestData.Messages)
                         await unitOfWork.Set<Message>().AddAsync(message);
 
-                if (!unitOfWork.Set<Server>().Any())
+                if (!(await unitOfWork.Set<Server>().GetAllAsync()).Any())
                     foreach (var server in TestData.Servers)
                         await unitOfWork.Set<Server>().AddAsync(server);
-                if (!unitOfWork.Set<Sender>().Any())
+                if (!(await unitOfWork.Set<Sender>().GetAllAsync()).Any())
                     foreach (var item in TestData.Senders)
                         await unitOfWork.Set<Sender>().AddAsync(item);
 
-                if (!unitOfWork.Set<Recipient>().Any())
+                if (!(await unitOfWork.Set<Recipient>().GetAllAsync()).Any())
                     foreach (var recipient in TestData.Recipients)
                         await unitOfWork.Set<Recipient>().AddAsync(recipient);
 
                 await unitOfWork.CommitAsync();
 
 
-                if (!unitOfWork.Set<ScheduleTask>().Any())
+                if ( !(await unitOfWork.Set<ScheduleTask>().GetAllAsync()).Any())
                     foreach (var scheduleTask in TestData.ScheduleTasks)
                     {
                         await unitOfWork.Set<ScheduleTask>().AddAsync(scheduleTask);

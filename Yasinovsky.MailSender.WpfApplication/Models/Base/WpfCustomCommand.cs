@@ -8,9 +8,6 @@ namespace Yasinovsky.MailSender.WpfApplication.Models.Base
 {
     public class WpfCustomCommand : CustomCommand
     {
-        private readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
-
         public WpfCustomCommand([NotNull] Action execute, Func<bool> canExecute = null) : 
             this((o) => execute.Invoke(),
                 canExecute is null ? null : o => canExecute.Invoke())

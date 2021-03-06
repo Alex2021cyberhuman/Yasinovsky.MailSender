@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Yasinovsky.MailSender.Core.Contracts.Data;
 using Yasinovsky.MailSender.Core.Contracts.Services;
 using Yasinovsky.MailSender.Core.Enums;
+using Yasinovsky.MailSender.Core.Extensions;
 using Yasinovsky.MailSender.Core.Models;
 using Yasinovsky.MailSender.Core.Models.Base;
 using Yasinovsky.MailSender.WpfApplication.Models.Base;
@@ -187,21 +183,21 @@ namespace Yasinovsky.MailSender.WpfApplication
         private async void OnLoad()
         {
             await _unitOfWork.CommitAsync();
-            Recipients = new ObservableCollection<Recipient>(_unitOfWork.Set<Recipient>()
-                .ToList());
+            Recipients = new ObservableCollection<Recipient>(await _unitOfWork.Set<Recipient>()
+                .GetAllAsync());
             SelectedRecipient = Recipients.FirstOrDefault();
-            Senders = new ObservableCollection<Sender>(_unitOfWork.Set<Sender>()
-                .ToList());
+            Senders = new ObservableCollection<Sender>(await _unitOfWork.Set<Sender>()
+                .GetAllAsync());
             SelectedSender = Senders.FirstOrDefault();
-            Servers = new ObservableCollection<Server>(_unitOfWork.Set<Server>()
-                .ToList());
+            Servers = new ObservableCollection<Server>(await _unitOfWork.Set<Server>()
+                .GetAllAsync());
             SelectedServer = Servers.FirstOrDefault();
 
-            ScheduleTasks = new ObservableCollection<ScheduleTask>(_unitOfWork.Set<ScheduleTask>()
-                .ToList());
+            ScheduleTasks = new ObservableCollection<ScheduleTask>(await _unitOfWork.Set<ScheduleTask>()
+                .GetAllAsync());
 
-            Messages = new ObservableCollection<Message>(_unitOfWork.Set<Message>()
-                .ToList());
+            Messages = new ObservableCollection<Message>(await _unitOfWork.Set<Message>()
+                .GetAllAsync());
 
             SelectedMessage = Messages.FirstOrDefault();
         }
