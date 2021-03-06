@@ -31,10 +31,10 @@ namespace Yasinovsky.MailSender.Services
             //// NOTE: will throw if it is not numbers
             //var writingTasks = new List<Task>(32);
             var task = Task.Run(() =>
-            {
-                var writeRange = Partitioner.Create(
-                    inputs);
-                writeRange.AsParallel()
+            { 
+                inputs.AsParallel()
+                    .WithDegreeOfParallelism(int.MinValue)
+                    .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
                     .ForAll(tuple => File.WriteAllText(
                         Path.Combine(_directoryName, tuple.Item1),
                         $"{tuple.Item2} {tuple.Item3} {tuple.Item4}"));
@@ -60,7 +60,7 @@ namespace Yasinovsky.MailSender.Services
                 Enumerable
                 .Range(0, count)
                 .Select(i => new ValueTuple<string, int, decimal, decimal>
-                    ($"number-data-{random.Next(Int32.MinValue, Int32.MaxValue)}.txt",  i % 2,
+                    ($"number-data-{random.Next(int.MinValue, int.MaxValue)}.txt",  i % 2,
                     random.Next(min, max) + random.Next(1, 99) * 0.01m,
                     random.Next(min, max) + random.Next(1, 99) * 0.01m))
                 .ToList().AsEnumerable()
@@ -83,19 +83,17 @@ namespace Yasinovsky.MailSender.Services
 
             writerStringBuilder.AppendJoin("\n",
                 fileRange.AsParallel()
-                    .Select(fileName => File.ReadAllTextAsync(fileName))
-                    .Select(task => task.Result)
+                    .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
+                    .WithDegreeOfParallelism(Environment.ProcessorCount)
+                    .Select(File.ReadAllText)
                     .Select(CalculateText)
                     .Where(number => number.HasValue)
                     .Select(number => number.ToString()));
 
             var writer = new StreamWriter(_outFilename);
-            var writeThread = new Thread( () => writer.Write(writerStringBuilder));
-            writeThread.Start();
-            writeThread.Join();
+            writer.Write(writerStringBuilder);
 
             writer.Dispose();
-            
         }
 
         private static decimal? CalculateText(string number)

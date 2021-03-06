@@ -9,7 +9,12 @@ namespace Yasinovsky.MailSender.Services
         private readonly double[,] _a;
         private readonly double[,] _b;
 
-        public ParallelMatrixMultiplier(double[,] a, double[,] b)
+        private readonly ParallelOptions _options = new()
+        {
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
+
+        public ParallelMatrixMultiplier(double[,] a, double[,] b, ParallelOptions options = null)
         {
             if (a.GetLength(0) != b.GetLength(0)
                 || a.GetLength(1) != b.GetLength(1))
@@ -17,6 +22,8 @@ namespace Yasinovsky.MailSender.Services
             _a = a;
             
             _b = b;
+
+            _options = options ?? _options;
         }
 
         public double[,] Calculate()
@@ -40,11 +47,13 @@ namespace Yasinovsky.MailSender.Services
         public double[,] CalculateParallel()
         {
             var width = _b.GetLength(1);
+
             var result = new double[width, width];
-            Parallel.For(0, width, i => _ =
-                Parallel.For(0, width, j => 
+            Parallel.For(0, width, _options,i => _ =
+                Parallel.For(0, width, _options, j => 
                     result[i, j]
-                        = ParallelEnumerable.Range(0, width)
+                        = Enumerable
+                            .Range(0, width)
                             .Select(k => _a[i, k] * _b[k, j])
                             .Sum()));
 
