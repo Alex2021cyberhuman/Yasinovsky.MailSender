@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
@@ -11,11 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.1.21102.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0-preview.1.21102.12" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Yasinovsky.MailSender.Services.Wpf\Yasinovsky.MailSender.Services.Wpf.csproj" />
     <ProjectReference Include="..\MovieSeller.Core\MovieSeller.Core.csproj" />
+    <ProjectReference Include="..\MovieSeller.Data\MovieSeller.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

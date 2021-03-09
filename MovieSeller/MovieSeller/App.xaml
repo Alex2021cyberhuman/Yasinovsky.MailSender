@@ -5,5 +5,7 @@
     xmlns:local="clr-namespace:MovieSeller"
     Exit="App_OnExit"
     Startup="App_OnStartup">
-    <Application.Resources />
+    <Application.Resources>
+        <local:ViewModelLocator x:Key="ViewModelLocator" />
+    </Application.Resources>
 </Application>

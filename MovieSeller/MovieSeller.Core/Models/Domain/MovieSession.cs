@@ -11,26 +11,28 @@ namespace MovieSeller.Core.Models.Domain
 {
     public class MovieSession<TKey> : IHasKey<TKey> where TKey: IEquatable<TKey>
     {
-        public TKey Id { get; set; }
+        public virtual TKey Id { get; set; }
 
-        public DateTime Begin { get; set; }
+        public virtual DateTime Begin { get; set; }
 
 
-        public DateTime End => Begin.Add(Movie.Duration);
+        public virtual DateTime End => Begin.Add(Movie.Duration);
 
         [Range(0, double.MaxValue)]
-        public decimal Price { get; set; }
+        public virtual decimal Price { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int MaxCount { get; set; }
+        public virtual int MaxCount { get; set; }
 
         [ForeignKey(nameof(Movie<TKey>))]
-        public TKey MovieId { get; set; }
+        public virtual TKey MovieId { get; set; }
 
-        public Movie<TKey> Movie { get; set; }
+        public virtual Movie<TKey> Movie { get; set; }
 
-        public ICollection<Booking<TKey>> Bookings { get; set; }
+        public virtual ICollection<Booking<TKey>> Bookings { get; set; }
     }
 
-    public class MovieSession : MovieSession<Guid> { }
+    public class MovieSession : MovieSession<Guid>
+    {
+    }
 }

@@ -13,10 +13,8 @@
     Title="MovieSessionsPage"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    d:DataContext="{Binding Path=MovieSessions, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-    <Page.DataContext>
-        <viewModels:MovieSessionsViewModel />
-    </Page.DataContext>
     <Grid>
         <DataGrid
             Margin="0,0,-374,45"
@@ -39,7 +37,7 @@
                                     Content="{x:Static properties:Resource.ButtonContentBuyBooking}" />
                                 <Button
                                     Command="{Binding Path=DataContext.ChangeMovieCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
-                                    CommandParameter="{Binding Movie}"
+                                    CommandParameter="{Binding }"
                                     Content="{x:Static properties:Resource.ButtonContentChangeMovie}" />
                                 <Button
                                     Command="{Binding Path=DataContext.RemoveSessionCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
