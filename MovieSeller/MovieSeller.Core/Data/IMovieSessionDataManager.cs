@@ -3,7 +3,7 @@ using MovieSeller.Core.Models.Domain;
 
 namespace MovieSeller.Core.Data
 {
-    public interface IMovieSessionDataManager : IDataManager<MovieSession, Guid>
+    public interface IMovieSessionDataManager : IDataManager<MovieSession>
 
     {
     }

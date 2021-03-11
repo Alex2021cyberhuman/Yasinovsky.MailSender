@@ -44,7 +44,10 @@ namespace MovieSeller
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
 
-            var scope = Host.Services.CreateScope();
+            using var scope = Host.Services.CreateScope();
+            await using var context = scope.ServiceProvider.GetRequiredService<MovieSellerDbContext>();
+            await context.Database.EnsureCreatedAsync();
+            await context.Database.MigrateAsync();
             var mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
             MainWindow = mainWindow;
             MainWindow.Show();
@@ -91,13 +94,17 @@ namespace MovieSeller
             services.AddSingleton<MainWindow>();
             services.AddTransient<EditMovieWindow>();
             services.AddTransient<BuyBookingWindow>();
+            services.AddTransient<ConfirmWindow>();
 
             services.AddTransient<MovieSessionsPage>();
             services.AddTransient<CreateNewMovieSessionPage>();
 
             // Add ViewModels
-            services.AddTransient<MovieSessionsPage>();
-
+            services.AddTransient<MovieSessionsViewModel>();
+            services.AddTransient<EditMovieViewModel>();
+            services.AddTransient<CreateNewMovieSessionViewModel>();
+            services.AddTransient<BuyBookingViewModel>();
+            services.AddTransient<ConfirmDeleteViewModel>();
             // Add Services
             services.AddScoped<IBookingDataManager, DbBookingDataManager>();
             services.AddScoped<IMovieDataManager, DbMovieDataManager>();
@@ -122,8 +129,9 @@ namespace MovieSeller
             services.AddSingleton<IDialogNavigationService>(provider =>
             {
                 var navigationService = provider.GetRequiredService<DialogNavigationService>();
-                navigationService.Configure(nameof(EditMovieWindow), typeof(EditMovieWindow));
-                navigationService.Configure(nameof(BuyBookingWindow), typeof(BuyBookingWindow));
+                navigationService.Configure(nameof(EditMovieViewModel), typeof(EditMovieWindow));
+                navigationService.Configure(nameof(BuyBookingViewModel), typeof(BuyBookingWindow));
+                navigationService.Configure(nameof(ConfirmDeleteViewModel), typeof(ConfirmWindow));
                 return navigationService;
             });
         }

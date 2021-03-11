@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,6 +21,8 @@ namespace MovieSeller.Data.DataManagers
             _logger = logger;
         }
 
+        public IQueryable<Movie> Queryable => _context.Set<Movie>().AsQueryable();
+
         public async Task<IEnumerable<Movie>> GetWhereAsync(Expression<Func<Movie, bool>> expression)
         {
             return (await _context.Set<Movie>().Where(expression).AsNoTracking().ToListAsync()).AsEnumerable();
@@ -40,6 +41,8 @@ namespace MovieSeller.Data.DataManagers
                 $"{typeof(Movie).FullName} " +
                 $"added to {_context.GetType().FullName} " +
                 $"with values {entry.Entity}");
+            entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             return entry.Entity;
         }
 
@@ -51,6 +54,8 @@ namespace MovieSeller.Data.DataManagers
                 $"{typeof(Movie).FullName} " +
                 $"updated in {_context.GetType().FullName} " +
                 $"with values {entry.Entity}");
+            entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             return entry.Entity;
         }
 
@@ -58,6 +63,8 @@ namespace MovieSeller.Data.DataManagers
         {
             var entry = _context.Set<Movie>().Remove(item);
             await _context.SaveChangesAsync();
+            entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(Movie).FullName} " +
                 $"removed from {_context.GetType().FullName} " +

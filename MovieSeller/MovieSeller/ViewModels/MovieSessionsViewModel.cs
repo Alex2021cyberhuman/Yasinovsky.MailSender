@@ -1,62 +1,116 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using MovieSeller.Core.Data;
+using MovieSeller.Core.Extensions;
 using MovieSeller.Core.Models.Domain;
 using MovieSeller.Core.Services;
 using Yasinovsky.MailSender.Core.Models.Base;
+using Yasinovsky.MailSender.Services.Wpf.Commands;
 
 namespace MovieSeller.ViewModels
 {
-    public class MovieSessionsViewModel
+    public class MovieSessionsViewModel : BaseViewModel
     {
         private readonly IMovieSessionDataManager _movieSessionDataManager;
         private readonly IServiceProvider _serviceProvider;
+        private ObservableCollection<MovieSession> _movieSessions;
 
         public MovieSessionsViewModel(IMovieSessionDataManager movieSessionDataManager, IServiceProvider serviceProvider)
         {
             _movieSessionDataManager = movieSessionDataManager;
             _serviceProvider = serviceProvider;
             ChangeMovieCommand = new CustomCommand(ChangeMovie);
+            LoadCommand = new CustomCommand(Load);
+            AddCommand = new CustomCommand(Add);
+            BuyBookingCommand = new WpfCustomCommand(BuyBooking, o => 
+                o is MovieSession m && m.BookingCount < m.MaxCount);
+            RemoveSessionCommand = new CustomCommand(Remove);
+            Debug.WriteLine(nameof(MovieSessionsViewModel));
+            Debug.WriteLine(movieSessionDataManager.GetType().FullName);
+            Debug.WriteLine(serviceProvider.GetType().FullName);
         }
-
-        private async void ChangeMovie(object movieSessionObject)
+        
+        public ObservableCollection<MovieSession> MovieSessions
         {
-            var movieSession = (MovieSession) movieSessionObject;
-            var navigationService = _serviceProvider.GetRequiredService<IDialogNavigationService>();
-            var editMovieViewModel = _serviceProvider.GetRequiredService<EditMovieViewModel>();
-            editMovieViewModel.Movie = (Movie) movieSession.Movie;
-            await navigationService.ShowDialogAsync(nameof(EditMovieViewModel), editMovieViewModel);
-            movieSession.Movie = editMovieViewModel.Movie;
-            await _movieSessionDataManager.UpdateAsync(movieSession);
+            get => _movieSessions;
+            set => SetProperty(ref _movieSessions, value);
         }
-
-
-        public ObservableCollection<MovieSession> MovieSessions { get; set; } = new ObservableCollection<MovieSession>(
-            Enumerable.Range(1, 10)
-                .Select(i => (i, Guid.NewGuid()))
-                .Select(tuple => new MovieSession
-                {
-                    Id = tuple.Item2,
-                    Begin = DateTime.Now, Bookings = new List<Booking<Guid>>(),
-                    Movie = new Movie
-                    {
-                        Duration = TimeSpan.FromMinutes(tuple.i),
-                        Id = tuple.Item2,
-                        Name = "Movie" + tuple.Item2
-                    }, MovieId = tuple.Item2,
-                    Price = tuple.i
-                }).ToList());
 
         public ICommand BuyBookingCommand { get; }
 
         public ICommand ChangeMovieCommand { get; }
 
         public ICommand RemoveSessionCommand { get; }
+
+        public ICommand LoadCommand { get; }
+
+        public ICommand AddCommand { get; }
+
+        private async void BuyBooking(object obj)
+        {
+            var movieSession = (MovieSession)obj;
+            var navigationService = _serviceProvider.GetRequiredService<IDialogNavigationService>();
+            var buyBookingViewModel = _serviceProvider.GetRequiredService<BuyBookingViewModel>();
+            buyBookingViewModel.MaxCount = movieSession.MaxCount - movieSession.BookingCount; 
+            if (!await navigationService.ShowDialogAsync(nameof(BuyBookingViewModel), buyBookingViewModel)) return;
+            movieSession.Bookings.Add(
+                new Booking
+                {
+                    Booked = DateTime.UtcNow,
+                    Count = buyBookingViewModel.Count
+                });
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(MovieSessions)));
+            await _movieSessionDataManager.UpdateAsync(movieSession);
+        }
+
+        private async void Remove(object obj)
+        {
+            var movieSession = (MovieSession)obj;
+            var navigationService = _serviceProvider.GetRequiredService<IDialogNavigationService>();
+            var viewModel = _serviceProvider.GetRequiredService<ConfirmDeleteViewModel>();
+            viewModel.MovieSession = movieSession;
+            if (!await navigationService.ShowDialogAsync(nameof(ConfirmDeleteViewModel), viewModel)) return;
+            _movieSessions.Remove(movieSession);
+            await _movieSessionDataManager.RemoveAsync(movieSession);
+        }
+
+        private void Add()
+        {
+            var navigationService = _serviceProvider.GetRequiredService<INavigationService>();
+            navigationService.NavigateToAsync(nameof(CreateNewMovieSessionViewModel));
+        }
+
+        private async void Load()
+        {
+            var movieSessionsEnumerable = await _movieSessionDataManager.GetAllAsync();
+            MovieSessions = new ObservableCollection<MovieSession>(movieSessionsEnumerable);
+        }
+
+        private async void ChangeMovie(object obj)
+        {
+            var movieSession = (MovieSession) obj;
+            var navigationService = _serviceProvider.GetRequiredService<IDialogNavigationService>();
+            var movieDataManager = _serviceProvider.GetRequiredService<IMovieDataManager>();
+            var editMovieViewModel = _serviceProvider.GetRequiredService<EditMovieViewModel>();
+            editMovieViewModel.SelectedMovie = movieSession.Movie;
+            editMovieViewModel.Movies = new ObservableCollection<Movie>(
+                await movieDataManager.GetAllAsync()
+            );
+
+            if (!await navigationService.ShowDialogAsync(nameof(EditMovieViewModel), editMovieViewModel)) return;
+            movieSession.Movie = editMovieViewModel.SelectedMovie;
+            
+            await _movieSessionDataManager.UpdateAsync(movieSession);
+            Load();
+        }
+
     }
 }

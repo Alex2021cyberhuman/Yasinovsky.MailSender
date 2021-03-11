@@ -16,6 +16,7 @@ namespace MovieSeller.Services
         private readonly Frame _frame;
         private readonly IServiceProvider _provider;
         private readonly IDictionary<string, Type> _pages = new Dictionary<string, Type>();
+        private readonly Stack<string> _keysStack = new();
         public NavigationService(IServiceProvider provider, Frame frame)
         {
             _provider = provider;
@@ -43,17 +44,22 @@ namespace MovieSeller.Services
                 if (context is not null && requiredService is FrameworkElement frameworkElement)
                     frameworkElement.DataContext = context;
                 if (!saveHistory)
+                {
                     _frame.RemoveHistory();
+                    _keysStack.Clear();
+                    
+                }
+                _keysStack.Push(key);
                 _frame.Navigate(requiredService);
             }).Task;
         }
 
         public bool CanGoBack => _frame.CanGoBack;
 
-        public Task GoBackAsync()
+        public async Task GoBackAsync(object context = null)
         {
-            _frame.GoBack();
-            return Task.CompletedTask;
+            _keysStack.Pop();
+            await NavigateToAsync(_keysStack.Peek(), context);
         }
     }
 }

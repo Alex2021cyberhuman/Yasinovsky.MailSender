@@ -6,32 +6,72 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MovieSeller.Core.Models.Base;
+using Yasinovsky.MailSender.Core.Models.Base;
 
 namespace MovieSeller.Core.Models.Domain
 {
-    public class MovieSession<TKey> : IHasKey<TKey> where TKey: IEquatable<TKey>
+    public abstract class MovieSession<TKey> : BaseViewModel, IHasKey<TKey> where TKey: IEquatable<TKey>
     {
-        public virtual TKey Id { get; set; }
+        private TKey _id;
+        private DateTime _begin;
+        private decimal _price;
+        private int _maxCount;
+        private TKey _movieId;
+        private Movie _movie;
+        private ICollection<Booking> _bookings;
 
-        public virtual DateTime Begin { get; set; }
+        public virtual TKey Id
+        {
+            get => _id;
+            set => SetProperty(ref _id, value);
+        }
+
+        public virtual DateTime Begin
+        {
+            get => _begin;
+            set => SetProperty(ref _begin, value);
+        }
 
 
         public virtual DateTime End => Begin.Add(Movie.Duration);
 
         [Range(0, double.MaxValue)]
-        public virtual decimal Price { get; set; }
+        public virtual decimal Price
+        {
+            get => _price;
+            set => SetProperty(ref _price, value);
+        }
 
         [Range(0, int.MaxValue)]
-        public virtual int MaxCount { get; set; }
+        public virtual int MaxCount
+        {
+            get => _maxCount;
+            set => SetProperty(ref _maxCount, value);
+        }
 
-        [ForeignKey(nameof(Movie<TKey>))]
-        public virtual TKey MovieId { get; set; }
+        [ForeignKey(nameof(Movie))]
+        public virtual TKey MovieId
+        {
+            get => _movieId;
+            set => SetProperty(ref _movieId, value);
+        }
 
-        public virtual Movie<TKey> Movie { get; set; }
+        public virtual Movie Movie
+        {
+            get => _movie;
+            set => SetProperty(ref _movie, value);
+        }
 
-        public virtual ICollection<Booking<TKey>> Bookings { get; set; }
+        public int BookingCount => Bookings.Sum(x => x.Count);
+
+        public virtual ICollection<Booking> Bookings
+        {
+            get => _bookings;
+            set => SetProperty(ref _bookings, value);
+        }
     }
 
+    [Table("MovieSession")]
     public class MovieSession : MovieSession<Guid>
     {
     }

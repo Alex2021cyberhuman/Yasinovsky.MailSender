@@ -7,8 +7,7 @@ using MovieSeller.Core.Models.Domain;
 
 namespace MovieSeller.Core.Data
 {
-    public interface IMovieDataManager : IDataManager<Movie, Guid>
-
+    public interface IMovieDataManager : IDataManager<Movie>
     {
     }
 }

@@ -20,11 +20,24 @@ namespace MovieSeller.Views.Windows
     /// </summary>
     public partial class EditMovieWindow
     {
+        private EditMovieViewModel _viewModel;
+
         public EditMovieWindow()
         {
             InitializeComponent();
-            var viewModel = (EditMovieViewModel) DataContext;
-            viewModel.DialogClose += ViewModel_DialogClose;
+
+            DataContextChanged += EditMovieWindow_DataContextChanged;
+        }
+
+        private void EditMovieWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (DataContext is EditMovieViewModel viewModel)
+            {
+                if (_viewModel is not null)
+                    _viewModel.DialogClose -= ViewModel_DialogClose;
+                _viewModel = viewModel;
+                _viewModel.DialogClose += ViewModel_DialogClose;
+            }
         }
 
         private void ViewModel_DialogClose(object sender, bool e)

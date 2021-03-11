@@ -61,6 +61,15 @@ namespace MovieSeller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MovieSellerApp.
+        /// </summary>
+        public static string ApplicationName {
+            get {
+                return ResourceManager.GetString("ApplicationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buy Booking.
         /// </summary>
         public static string ButtonContentBuyBooking {
@@ -70,7 +79,7 @@ namespace MovieSeller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Movie.
+        ///   Looks up a localized string similar to Edit SelectedMovie.
         /// </summary>
         public static string ButtonContentChangeMovie {
             get {
@@ -88,6 +97,33 @@ namespace MovieSeller.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelButtonText {
+            get {
+                return ResourceManager.GetString("CancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to delete a movie session .
+        /// </summary>
+        public static string ConfirmDeleteTextPart1 {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteTextPart1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ? These changes cannot be reversed..
+        /// </summary>
+        public static string ConfirmDeleteTextPart2 {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteTextPart2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Begin.
         /// </summary>
         public static string DataGridHeaderBegin {
@@ -97,7 +133,7 @@ namespace MovieSeller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current Count.
+        ///   Looks up a localized string similar to Current MaxCount.
         /// </summary>
         public static string DataGridHeaderCurrentCount {
             get {
@@ -115,7 +151,7 @@ namespace MovieSeller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max Count.
+        ///   Looks up a localized string similar to Max MaxCount.
         /// </summary>
         public static string DataGridHeaderMaxCount {
             get {
@@ -124,11 +160,65 @@ namespace MovieSeller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Movie.
+        ///   Looks up a localized string similar to SelectedMovie.
         /// </summary>
         public static string DataGridHeaderMovieName {
             get {
                 return ResourceManager.GetString("DataGridHeaderMovieName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add SelectedMovie.
+        /// </summary>
+        public static string MenuItemAddMovieSession {
+            get {
+                return ResourceManager.GetString("MenuItemAddMovieSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration.
+        /// </summary>
+        public static string MovieDuration {
+            get {
+                return ResourceManager.GetString("MovieDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Booking Count.
+        /// </summary>
+        public static string MovieSessionBookingCount {
+            get {
+                return ResourceManager.GetString("MovieSessionBookingCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Count.
+        /// </summary>
+        public static string MovieSessionBookingMaxCount {
+            get {
+                return ResourceManager.GetString("MovieSessionBookingMaxCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        public static string NewButtonText {
+            get {
+                return ResourceManager.GetString("NewButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string OkButtonText {
+            get {
+                return ResourceManager.GetString("OkButtonText", resourceCulture);
             }
         }
     }

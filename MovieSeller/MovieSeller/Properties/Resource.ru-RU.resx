@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>Продавец фильмов</value>
+  </data>
   <data name="ButtonContentBuyBooking" xml:space="preserve">
     <value>Забронировать</value>
   </data>
@@ -125,6 +128,15 @@
   </data>
   <data name="ButtonContentRemoveSession" xml:space="preserve">
     <value>Удалить</value>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ConfirmDeleteTextPart1" xml:space="preserve">
+    <value>Вы хотите удалить показ фильма </value>
+  </data>
+  <data name="ConfirmDeleteTextPart2" xml:space="preserve">
+    <value>? Эти изменения не изменить :)</value>
   </data>
   <data name="DataGridHeaderBegin" xml:space="preserve">
     <value>Начало</value>
@@ -140,5 +152,23 @@
   </data>
   <data name="DataGridHeaderMovieName" xml:space="preserve">
     <value>Фильм</value>
+  </data>
+  <data name="MenuItemAddMovieSession" xml:space="preserve">
+    <value>Создать запись</value>
+  </data>
+  <data name="MovieDuration" xml:space="preserve">
+    <value>Длительность</value>
+  </data>
+  <data name="MovieSessionBookingCount" xml:space="preserve">
+    <value>Количество билетов</value>
+  </data>
+  <data name="MovieSessionBookingMaxCount" xml:space="preserve">
+    <value>Максимально билетов</value>
+  </data>
+  <data name="NewButtonText" xml:space="preserve">
+    <value>Новый</value>
+  </data>
+  <data name="OkButtonText" xml:space="preserve">
+    <value>Подтвердить</value>
   </data>
 </root>

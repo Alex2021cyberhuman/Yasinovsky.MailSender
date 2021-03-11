@@ -11,6 +11,6 @@ namespace MovieSeller.Core.Services
 
         bool CanGoBack { get; }
 
-        Task GoBackAsync();
+        Task GoBackAsync(object context = null);
     }
 }

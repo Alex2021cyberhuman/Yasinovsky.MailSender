@@ -13,11 +13,19 @@
     Title="MovieSessionsPage"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    d:DataContext="{Binding Path=MovieSessions, Source={StaticResource ViewModelLocator}}"
+    DataContext="{Binding Path=MovieSessions, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-    <Grid>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding LoadCommand}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Command="{Binding AddCommand}" Header="{x:Static properties:Resource.MenuItemAddMovieSession}" />
+        </Menu>
         <DataGrid
-            Margin="0,0,-374,45"
+            Margin="10"
             AutoGenerateColumns="False"
             IsReadOnly="True"
             ItemsSource="{Binding MovieSessions}">
@@ -26,7 +34,7 @@
                 <DataGridTextColumn Binding="{Binding Path=Begin}" Header="{x:Static properties:Resource.DataGridHeaderBegin}" />
                 <DataGridTextColumn Binding="{Binding Path=End}" Header="{x:Static properties:Resource.DataGridHeaderEnd}" />
                 <DataGridTextColumn Binding="{Binding Path=MaxCount}" Header="{x:Static properties:Resource.DataGridHeaderMaxCount}" />
-                <DataGridTextColumn Binding="{Binding Path=Bookings.Count}" Header="{x:Static properties:Resource.DataGridHeaderCurrentCount}" />
+                <DataGridTextColumn Binding="{Binding Path=BookingCount}" Header="{x:Static properties:Resource.DataGridHeaderCurrentCount}" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="domain:MovieSession">
@@ -37,11 +45,11 @@
                                     Content="{x:Static properties:Resource.ButtonContentBuyBooking}" />
                                 <Button
                                     Command="{Binding Path=DataContext.ChangeMovieCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
-                                    CommandParameter="{Binding }"
+                                    CommandParameter="{Binding}"
                                     Content="{x:Static properties:Resource.ButtonContentChangeMovie}" />
                                 <Button
                                     Command="{Binding Path=DataContext.RemoveSessionCommand, RelativeSource={RelativeSource AncestorType=local:MovieSessionsPage, Mode=FindAncestor}}"
-                                    CommandParameter="{Binding Movie}"
+                                    CommandParameter="{Binding}"
                                     Content="{x:Static properties:Resource.ButtonContentRemoveSession}" />
                             </StackPanel>
                         </DataTemplate>
@@ -50,5 +58,5 @@
             </DataGrid.Columns>
         </DataGrid>
 
-    </Grid>
+    </DockPanel>
 </Page>

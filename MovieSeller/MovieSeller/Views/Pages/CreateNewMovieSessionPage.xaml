@@ -8,7 +8,37 @@
     Title="CreateNewMovieSessionPage"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    DataContext="{Binding CreateMovieSession, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
 
-    <Grid />
+    <StackPanel Margin="25,10" HorizontalAlignment="Center">
+        <TextBlock Text="Date" />
+        <DatePicker SelectedDate="{Binding MovieSession.Begin}" />
+        <TextBlock>
+            <Run Text="Max count:" />
+            <Run Text="{Binding MovieSession.MaxCount}" />
+        </TextBlock>
+        <Slider
+            TickFrequency="5"
+            TickPlacement="Both"
+            ToolTip="Max Tickets"
+            Value="{Binding MovieSession.MaxCount}" />
+        <TextBlock>
+            <Run Text="Price:" />
+            <Run Text="{Binding MovieSession.Price}" />
+        </TextBlock>
+        <Slider
+            MinWidth="250"
+            TickFrequency="5"
+            TickPlacement="Both"
+            ToolTip="Price"
+            Value="{Binding MovieSession.Price}" />
+        <TextBlock ToolTip="SelectedMovie Name">
+            <Run Text="Movie name: " />
+            <Run Text="{Binding MovieSession.Movie.Name, FallbackValue='Select movie'}" />
+        </TextBlock>
+        <Button Command="{Binding ChangeMovieCommand}" Content="Change movie" />
+        <Button Command="{Binding SaveCommand}" Content="Save" />
+        <Button Command="{Binding CancelCommand}" Content="Cancel" />
+    </StackPanel>
 </Page>

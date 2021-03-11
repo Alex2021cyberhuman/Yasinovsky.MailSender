@@ -21,6 +21,9 @@ namespace MovieSeller.Data.DataManagers
             _logger = logger;
         }
 
+
+        public IQueryable<MovieSession> Queryable => _context.Set<MovieSession>().AsQueryable();
+
         public async Task<IEnumerable<MovieSession>> GetWhereAsync(Expression<Func<MovieSession, bool>> expression)
         {
             return (await _context.Set<MovieSession>().Where(expression).AsNoTracking().ToListAsync()).AsEnumerable();
@@ -35,6 +38,8 @@ namespace MovieSeller.Data.DataManagers
         {
             var entry = await _context.Set<MovieSession>().AddAsync(item);
             await _context.SaveChangesAsync();
+                                    entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(MovieSession).FullName} " +
                 $"added to {_context.GetType().FullName} " +
@@ -46,6 +51,8 @@ namespace MovieSeller.Data.DataManagers
         {
             var entry = _context.Set<MovieSession>().Update(item);
             await _context.SaveChangesAsync();
+                        entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(MovieSession).FullName} " +
                 $"updated in {_context.GetType().FullName} " +
@@ -56,7 +63,10 @@ namespace MovieSeller.Data.DataManagers
         public async Task RemoveAsync(MovieSession item)
         {
             var entry = _context.Set<MovieSession>().Remove(item);
+
             await _context.SaveChangesAsync();
+                        entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(MovieSession).FullName} " +
                 $"removed from {_context.GetType().FullName} " +

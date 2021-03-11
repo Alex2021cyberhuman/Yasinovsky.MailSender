@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Yasinovsky.MailSender.Core\Yasinovsky.MailSender.Core.csproj" />
+  </ItemGroup>
+
 </Project>

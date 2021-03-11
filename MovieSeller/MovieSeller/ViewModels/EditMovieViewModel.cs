@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MovieSeller.Core.Data;
+using MovieSeller.Core.Extensions;
 using MovieSeller.Core.Models.Domain;
 using Yasinovsky.MailSender.Core.Models.Base;
 using Yasinovsky.MailSender.Services.Wpf.Commands;
@@ -16,51 +14,37 @@ namespace MovieSeller.ViewModels
     public class EditMovieViewModel : BaseViewModel
     {
         private readonly IMovieDataManager _movieDataManager;
-        private Movie _movie;
+        private Movie _selectedMovie;
+        private ObservableCollection<Movie> _movies;
 
-        public EditMovieViewModel()
+        public EditMovieViewModel(IMovieDataManager movieDataManager)
         {
-            Movies = new(Enumerable.Range(0, 10).Select(i => new Movie
-            {
-                Duration = TimeSpan.MaxValue,
-                Id = NewGuid(),
-                Name = "Movie" + i
-            }).ToList());
-            Movie = Movies[0];
+            _movieDataManager = movieDataManager;
 
-            UpdateMovieCommand = new WpfCustomCommand(
-                UpdateMovie, () => Movie is not null);
-            AddMovieCommand = new WpfCustomCommand(
-                AddMovie);
+            CancelCommand = new CustomCommand(() => OnDialogClose(false));
             ConfirmMovieCommand = new WpfCustomCommand(
-                ConfirmMovie, () => Movie is not null);
+                ConfirmMovie, () => SelectedMovie is not null &&! string.IsNullOrWhiteSpace(SelectedMovie.Name) && SelectedMovie.Duration > TimeSpan.Zero);
+            UpdateMovieCommand = new WpfCustomCommand(
+                UpdateMovie, () => SelectedMovie is not null && !string.IsNullOrWhiteSpace(SelectedMovie.Name) && SelectedMovie.Duration > TimeSpan.Zero);
+            AddMovieCommand = new WpfCustomCommand(
+                AddMovie, () => SelectedMovie is not null && !string.IsNullOrWhiteSpace(SelectedMovie.Name) && SelectedMovie.Duration > TimeSpan.Zero);
+            LoadCommand = new CustomCommand(Load);
         }
 
-        private void ConfirmMovie()
+        
+
+        public Movie SelectedMovie
         {
-            OnDialogClose(true);
+            get => _selectedMovie;
+            set => SetProperty(ref _selectedMovie, value);
         }
 
-        private void AddMovie()
+
+        public ObservableCollection<Movie> Movies
         {
-            var movie = new Movie();
-            Movies.Add(movie);
+            get => _movies;
+            set => SetProperty(ref _movies, value);
         }
-
-        private async void UpdateMovie()
-        {
-            await _movieDataManager.UpdateAsync(Movie);
-        }
-
-        public Movie Movie
-        {
-            get => _movie;
-            set => SetProperty(ref _movie, value);
-        }
-
-        public event EventHandler<bool> DialogClose;
-
-        public ObservableCollection<Movie> Movies { get; set; }
 
         public ICommand UpdateMovieCommand { get; }
 
@@ -68,9 +52,46 @@ namespace MovieSeller.ViewModels
 
         public ICommand ConfirmMovieCommand { get; }
 
+        public ICommand LoadCommand { get; }
+
+        public ICommand CancelCommand { get; }
+
+        public event EventHandler<bool> DialogClose;
+
         protected virtual void OnDialogClose(bool e)
         {
             DialogClose?.Invoke(this, e);
+        }
+
+        private void Load()
+        {
+            if (SelectedMovie is not null || !Movies.Contains(SelectedMovie))
+                SelectedMovie = Movies.FirstOrDefault(x => x.Name == SelectedMovie?.Name);
+        }
+
+        private async void ConfirmMovie()
+        {
+            await _movieDataManager.UpdateAsync(SelectedMovie);
+            OnDialogClose(true);
+        }
+
+        private async void AddMovie()
+        {
+            var movie = (Movie)SelectedMovie.Clone();
+            movie.Name = $"{SelectedMovie.Name}({Movies.Count(x => x.Name.StartsWith(SelectedMovie.Name)) + 1})";
+            movie.Id = default;
+            _selectedMovie = movie;
+            SelectedMovie = movie;
+            if (!Movies.Contains(movie))
+                Movies.Add(movie);
+            await _movieDataManager.UpdateAsync(movie);
+        }
+
+        private async void UpdateMovie()
+        {
+            if (!Movies.Contains(SelectedMovie))
+                Movies.Add(SelectedMovie);
+            await _movieDataManager.UpdateAsync(SelectedMovie);
         }
     }
 }

@@ -11,7 +11,9 @@ namespace MovieSeller
 {
     public class ViewModelLocator
     {
-        public MovieSessionsViewModel MovieSessions => App.Host?.Services?.GetService<MovieSessionsViewModel>() ??
-                                                                new MovieSessionsViewModel();
+        public MovieSessionsViewModel MovieSessions => App.Host.Services.GetRequiredService<MovieSessionsViewModel>();
+
+        public CreateNewMovieSessionViewModel CreateMovieSession => App.Host.Services.GetRequiredService<CreateNewMovieSessionViewModel>();
+        public EditMovieViewModel EditMovie => App.Host.Services.GetRequiredService<EditMovieViewModel>();
     }
 }

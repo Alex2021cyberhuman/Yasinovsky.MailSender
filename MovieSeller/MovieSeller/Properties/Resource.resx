@@ -117,28 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>MovieSellerApp</value>
+  </data>
   <data name="ButtonContentBuyBooking" xml:space="preserve">
     <value>Buy Booking</value>
   </data>
   <data name="ButtonContentChangeMovie" xml:space="preserve">
-    <value>Edit Movie</value>
+    <value>Edit SelectedMovie</value>
   </data>
   <data name="ButtonContentRemoveSession" xml:space="preserve">
     <value>Remove</value>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ConfirmDeleteTextPart1" xml:space="preserve">
+    <value>Do you want to delete a movie session </value>
+  </data>
+  <data name="ConfirmDeleteTextPart2" xml:space="preserve">
+    <value>? These changes cannot be reversed.</value>
   </data>
   <data name="DataGridHeaderBegin" xml:space="preserve">
     <value>Begin</value>
   </data>
   <data name="DataGridHeaderCurrentCount" xml:space="preserve">
-    <value>Current Count</value>
+    <value>Current MaxCount</value>
   </data>
   <data name="DataGridHeaderEnd" xml:space="preserve">
     <value>End</value>
   </data>
   <data name="DataGridHeaderMaxCount" xml:space="preserve">
-    <value>Max Count</value>
+    <value>Max MaxCount</value>
   </data>
   <data name="DataGridHeaderMovieName" xml:space="preserve">
-    <value>Movie</value>
+    <value>SelectedMovie</value>
+  </data>
+  <data name="MenuItemAddMovieSession" xml:space="preserve">
+    <value>Add SelectedMovie</value>
+  </data>
+  <data name="MovieDuration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="MovieSessionBookingCount" xml:space="preserve">
+    <value>Booking Count</value>
+  </data>
+  <data name="MovieSessionBookingMaxCount" xml:space="preserve">
+    <value>Max Count</value>
+  </data>
+  <data name="NewButtonText" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="OkButtonText" xml:space="preserve">
+    <value>Ok</value>
   </data>
 </root>

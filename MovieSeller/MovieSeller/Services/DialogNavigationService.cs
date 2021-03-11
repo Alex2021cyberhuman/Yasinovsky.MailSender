@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using MovieSeller.Core.Services;
 
@@ -12,12 +13,10 @@ namespace MovieSeller.Services
     {
         private readonly IServiceProvider _provider;
         private readonly IDictionary<string, Type> _dialogs = new Dictionary<string, Type>();
-        private readonly INavigationService _navigationService;
 
-        public DialogNavigationService(IServiceProvider provider, INavigationService navigationService)
+        public DialogNavigationService(IServiceProvider provider)
         {
             _provider = provider;
-            _navigationService = navigationService;
         }
 
         public void Configure(string key, Type type)

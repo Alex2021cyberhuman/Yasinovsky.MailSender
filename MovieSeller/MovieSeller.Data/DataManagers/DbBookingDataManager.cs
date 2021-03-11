@@ -21,6 +21,8 @@ namespace MovieSeller.Data.DataManagers
             _logger = logger;
         }
 
+        public IQueryable<Booking> Queryable => _context.Set<Booking>().AsQueryable();
+
         public async Task<IEnumerable<Booking>> GetWhereAsync(Expression<Func<Booking, bool>> expression)
         {
             return (await _context.Set<Booking>().Where(expression).AsNoTracking().ToListAsync()).AsEnumerable();
@@ -35,6 +37,8 @@ namespace MovieSeller.Data.DataManagers
         {
             var entry = await _context.Set<Booking>().AddAsync(item);
             await _context.SaveChangesAsync();
+                        entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(Booking).FullName} " +
                 $"added to {_context.GetType().FullName} " +
@@ -46,6 +50,8 @@ namespace MovieSeller.Data.DataManagers
         {
             var entry = _context.Set<Booking>().Update(item);
             await _context.SaveChangesAsync();
+                        entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(Booking).FullName} " +
                 $"updated in {_context.GetType().FullName} " +
@@ -57,6 +63,8 @@ namespace MovieSeller.Data.DataManagers
         {
             var entry = _context.Set<Booking>().Remove(item);
             await _context.SaveChangesAsync();
+                        entry.State = EntityState.Detached;
+            _context.ChangeTracker.Clear();
             _logger?.LogInformation(
                 $"{typeof(Booking).FullName} " +
                 $"removed from {_context.GetType().FullName} " +

@@ -7,36 +7,49 @@
     xmlns:local="clr-namespace:MovieSeller.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:movieSeller="clr-namespace:MovieSeller"
+    xmlns:properties="clr-namespace:MovieSeller.Properties"
     xmlns:viewModels="clr-namespace:MovieSeller.ViewModels"
-    Title="EditMovieWindow"
-    Width="800"
-    Height="450"
+    Title="{x:Static properties:Resource.ApplicationName}"
+    Width="400"
+    Height="250"
+    DataContext="{Binding EditMovie, Source={StaticResource ViewModelLocator}}"
     mc:Ignorable="d">
-    <Window.DataContext>
-        <viewModels:EditMovieViewModel />
-    </Window.DataContext>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding LoadCommand}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <Grid>
-        <StackPanel>
+        <StackPanel Margin="10">
             <ComboBox
                 ItemsSource="{Binding Movies}"
-                SelectedItem="{Binding Movie}"
-                SelectedValue="{Binding Movie}" />
-            <TextBox Text="{Binding Movie.Name}">
+                SelectedItem="{Binding SelectedMovie}"
+                SelectedValue="{Binding SelectedMovie}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="{x:Static properties:Resource.DataGridHeaderMovieName}" />
+            <TextBox Text="{Binding SelectedMovie.Name}">
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="TextChanged">
                         <b:InvokeCommandAction Command="{Binding UpdateMovieCommand}" />
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
             </TextBox>
-            <TextBox Text="{Binding Movie.Duration}">
+            <TextBlock Text="{x:Static properties:Resource.MovieDuration}"  />
+            <TextBox Text="{Binding SelectedMovie.Duration}">
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="TextChanged">
                         <b:InvokeCommandAction Command="{Binding UpdateMovieCommand}" />
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
             </TextBox>
-            <Button Command="{Binding AddMovieCommand}" Content="Add" />
-            <Button Command="{Binding ConfirmMovieCommand}" Content="Ok" />
+            <Button Command="{Binding AddMovieCommand}" Content="{x:Static properties:Resource.NewButtonText}" />
+            <Button Command="{Binding ConfirmMovieCommand}" Content="{x:Static properties:Resource.OkButtonText}" />
+            <Button Command="{Binding CancelCommand}" Content="{x:Static properties:Resource.CancelButtonText}" />
         </StackPanel>
     </Grid>
 </Window>
