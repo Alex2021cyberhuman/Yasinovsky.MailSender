@@ -1,0 +1,35 @@
+﻿<Window
+    x:Class="MovieSeller.Views.Windows.BuyBookingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MovieSeller.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:properties="clr-namespace:MovieSeller.Properties"
+    xmlns:viewModels="clr-namespace:MovieSeller.ViewModels"
+    Title="{x:Static properties:Resource.ApplicationName}"
+    MaxWidth="400"
+    MaxHeight="200"
+    d:DataContext="{d:DesignInstance viewModels:BuyBookingViewModel}"
+    d:DesignWidth="200"
+    mc:Ignorable="d">
+    <StackPanel>
+        <TextBlock>
+            <Run Text="{x:Static properties:Resource.MovieSessionBookingCount}" />
+            <Run Text="{Binding Count}" />
+            <LineBreak />
+            <Run Text="{x:Static properties:Resource.MovieSessionBookingMaxCount}" />
+            <Run Text="{Binding MaxCount}" />
+            <LineBreak />
+        </TextBlock>
+        <Slider
+            MinWidth="100"
+            Margin="10,3"
+            Maximum="{Binding MaxCount}"
+            TickFrequency="1"
+            TickPlacement="Both"
+            Value="{Binding Count}" />
+        <Button Command="{Binding SaveCommand}" Content="{x:Static properties:Resource.OkButtonText}" />
+        <Button Command="{Binding CancelCommand}" Content="{x:Static properties:Resource.CancelButtonText}" />
+    </StackPanel>
+</Window>
