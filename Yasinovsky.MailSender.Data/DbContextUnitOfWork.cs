@@ -40,7 +40,7 @@ namespace Yasinovsky.MailSender.Data
             };
         }
 
-        public IRepository<T> Set<T>() => (IRepository<T>) _repositories[typeof(T)];
+        public IRepository<T> Set<T>() where T : class, IHasId => (IRepository<T>) ( _repositories.ContainsKey(typeof(T)) ? _repositories[typeof(T)] : _repositories[typeof(T)] = new DbContextRepository<T>(_context));
 
         public Task CommitAsync() => _context.SaveChangesAsync();
     }
